@@ -3,42 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Ian's All-in-One Dashboard</title>
+    <title>Mr. Ian's Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* --- GLOBAL DASHBOARD STYLES --- */
-        body { font-family: 'Poppins', sans-serif; }
         .tool-icon.active { background-color: #4A5568; color: white; }
-        .tool-content { display: none; height: 100%; overflow-y: auto; }
-        .tool-content.active { display: block; }
-        /* --- FLASHCARD TOOL STYLES --- */
-        #flashcards-tool { font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; }
-        .fc-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .fc-category-btn { padding: 20px; font-size: 1.2em; font-weight: bold; border: none; border-radius: 15px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.2); color: white; }
-        .fc-category-btn:hover { transform: translateY(-5px); }
-        .fc-container { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; max-width: 600px; margin: auto; }
-        .fc-image { width: 100%; max-width: 400px; height: 400px; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; font-size: 200px; background: #f8f9fa; border-radius: 15px; border: 3px solid #ddd; }
-        .fc-name { font-size: 3em; color: #333; margin-bottom: 30px; font-weight: bold; }
-        .fc-controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
-        .fc-control-btn { padding: 15px 30px; font-size: 1.2em; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; }
-        .fc-btn-prev { background: #ff6b6b; } .fc-btn-next { background: #51cf66; } .fc-btn-speak { background: #4dabf7; } .fc-btn-back { background: #868e96; }
-        /* --- TRANSLATOR TOOL STYLES --- */
-        #translator-tool { font-family: "Poppins", sans-serif; background: linear-gradient(135deg,#0f2027,#203a43,#2c5364); color: #f4f8ff; padding: 20px; }
-        .tr-app { max-width: 900px; margin: 0 auto; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; padding: 22px; }
-        .tr-io { display: grid; grid-template-columns: 1fr; gap: 14px; }
-        .tr-textarea { width: 100%; min-height: 120px; margin-top: 10px; resize: vertical; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: #f4f8ff; font-size: 15px; }
-        /* --- REPORTS TOOL STYLES --- */
-        #reports-tool { background: linear-gradient(135deg, #f5f7fb 0%, #e4edf5 100%); color: #333; padding: 20px; }
-        .rp-container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
-        .rp-header { background: linear-gradient(135deg, #2a53c1 0%, #1e3f9b 100%); color: white; padding: 30px; text-align: center; }
-        .rp-form-container { padding: 30px; }
+        .tool-content { display: none; }
+        .tool-content.active { display: flex; flex-direction: column; }
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
     <header class="bg-gray-900 text-white p-4 text-center shadow-md">
-        <h1 class="text-2xl font-bold">Mr. Ian's All-in-One Dashboard</h1>
+        <h1 class="text-2xl font-bold">Teacher's Dashboard</h1>
     </header>
     <div class="flex flex-1 overflow-hidden">
         <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
@@ -50,34 +26,56 @@
             <button onclick="showTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reports"><i class="fas fa-chart-bar fa-2x"></i></button>
         </nav>
         
-        <main id="main-content" class="flex-1 overflow-hidden">
-            <!-- Welcome Tool with Launchpad Button -->
-            <div id="welcome-tool" class="tool-content active p-4 text-center flex flex-col justify-center items-center h-full">
-                 <h2 class="text-4xl font-bold">Welcome to your Dashboard!</h2>
-                 <p class="text-lg text-gray-400 mt-4 mb-8">Click the button below to open your video call in a new tab.</p>
-                 <button onclick="window.open('https://meet.jit.si/Mr-Ians-Professional-Classroom-12345', '_blank');" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-xl transition-transform transform hover:scale-105">
+        <main id="main-content" class="flex-1 overflow-y-auto">
+            <div id="welcome-tool" class="tool-content active p-4 text-center justify-center items-center h-full">
+                <h2 class="text-4xl font-bold">Welcome to the Dashboard!</h2>
+                <p class="text-lg text-gray-400 mt-4 mb-8">Click the button below to open your video call in a new tab.</p>
+                <button onclick="window.open('https://meet.jit.si/Mr-Ians-Professional-Classroom-12345', '_blank');" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-xl transition-transform transform hover:scale-105">
                     🚀 Launch Video Call
-                 </button>
-                 <p class="mt-8 text-gray-500">After launching, arrange the two windows side-by-side for the best teaching experience.</p>
+                </button>
+                <p class="mt-8 text-gray-500">After launching, arrange the two windows side-by-side for the best experience.</p>
             </div>
             
-            <!-- All other tools are now just placeholders in this simplified final version -->
-            <div id="flashcards-tool" class="tool-content"><div class="fc-body"><h1>Flashcards loading...</h1></div></div>
-            <div id="whiteboard-tool" class="tool-content h-full"><iframe src="https://tldraw.com/" class="w-full h-full border-0 bg-white"></iframe></div>
-            <div id="translator-tool" class="tool-content"><div class="tr-body"><h1>Translator loading...</h1></div></div>
-            <div id="reading-tool" class="tool-content flex items-center justify-center p-8"><h1>Reading Tool loading...</h1></div>
-            <div id="reports-tool" class="tool-content"><div class="rp-body"><h1>Reports loading...</h1></div></div>
+            <div id="flashcards-tool" class="tool-content h-full">
+                <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="w-full h-full border-0"></iframe>
+            </div>
+            
+            <div id="whiteboard-tool" class="tool-content h-full">
+                <iframe src="https://tldraw.com/" class="w-full h-full border-0 bg-white"></iframe>
+            </div>
+
+            <div id="translator-tool" class="tool-content h-full">
+                 <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/" class="w-full h-full border-0"></iframe>
+            </div>
+
+            <div id="reading-tool" class="tool-content items-center justify-center p-8">
+                 <a href="https://storynory.com/" target="_blank" class="block w-full max-w-2xl h-80 bg-gray-900 rounded-2xl shadow-lg relative overflow-hidden">
+                    <img src="https://images.pexels.com/photos/3747505/pexels-photo-3747505.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="absolute inset-0 w-full h-full object-cover opacity-30">
+                    <div class="relative h-full flex flex-col items-center justify-center text-center p-4">
+                        <h2 class="text-5xl font-bold mb-2">Storynory</h2>
+                    </div>
+                </a>
+            </div>
+
+            <div id="reports-tool" class="tool-content h-full">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-reports-app/" class="w-full h-full border-0"></iframe>
+            </div>
         </main>
     </div>
     <script>
-        // Main Dashboard Logic
         function showTool(toolId) {
-            document.querySelectorAll('.tool-content').forEach(tool => tool.classList.remove('active'));
+            document.querySelectorAll('.tool-content').forEach(tool => {
+                tool.classList.remove('active');
+                // Iframe content is heavy, so we stop it from loading in the background
+                const iframe = tool.querySelector('iframe');
+                if (iframe) {
+                    iframe.src = iframe.src; // This effectively reloads and stops the iframe
+                }
+            });
             document.getElementById(toolId + '-tool').classList.add('active');
             document.querySelectorAll('.tool-icon').forEach(icon => icon.classList.remove('active'));
             document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
         }
-        // All other tool-specific JavaScript will be added here in the future.
     </script>
 </body>
 </html>
