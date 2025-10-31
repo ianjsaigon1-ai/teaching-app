@@ -27,13 +27,14 @@
         </nav>
         
         <main id="main-content" class="flex-1 overflow-y-auto">
+            <!-- THIS IS THE NEW, RELIABLE LAUNCHPAD -->
             <div id="welcome-tool" class="tool-content active p-4 text-center justify-center items-center h-full">
                 <h2 class="text-4xl font-bold">Welcome to the Dashboard!</h2>
                 <p class="text-lg text-gray-400 mt-4 mb-8">Click the button below to open your video call in a new tab.</p>
                 <button onclick="window.open('https://meet.jit.si/Mr-Ians-Professional-Classroom-12345', '_blank');" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-xl transition-transform transform hover:scale-105">
                     🚀 Launch Video Call
                 </button>
-                <p class="mt-8 text-gray-500">After launching, arrange the two windows side-by-side for the best experience.</p>
+                <p class="mt-8 text-gray-500">After launching, arrange the two windows side-by-side for the best teaching experience.</p>
             </div>
             
             <div id="flashcards-tool" class="tool-content h-full">
@@ -66,11 +67,6 @@
         function showTool(toolId) {
             document.querySelectorAll('.tool-content').forEach(tool => {
                 tool.classList.remove('active');
-                // Iframe content is heavy, so we stop it from loading in the background
-                const iframe = tool.querySelector('iframe');
-                if (iframe) {
-                    iframe.src = iframe.src; // This effectively reloads and stops the iframe
-                }
             });
             document.getElementById(toolId + '-tool').classList.add('active');
             document.querySelectorAll('.tool-icon').forEach(icon => icon.classList.remove('active'));
