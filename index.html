@@ -10,13 +10,12 @@
         body { font-family: 'Poppins', sans-serif; }
         .font-handwriting { font-family: 'Patrick Hand', cursive; }
         
-        /* THIS IS THE CHANGE: The background-image URL is now your chosen image. */
         .bg-classroom { 
             background-color: #1a202c; 
             background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://pixabay.com/get/gaa1cf70c7933f59ef391d693911edfb24aeaa0e39d43327dde878f3019d7ea74fd09ddc881e31815e34512eeaef2be82.jpg'); 
             background-size: cover; 
             background-position: center;
-            background-attachment: fixed; /* Ensures the background stays in place on scroll */
+            background-attachment: fixed;
         }
         
         .modal-overlay {
@@ -24,13 +23,19 @@
             background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
             display: flex; align-items: center; justify-content: center;
         }
+        
+        /* Add a subtle shadow to the text to make it stand out */
+        .text-shadow {
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
     </style>
 </head>
 <body class="bg-classroom text-white">
     <div class="min-h-screen flex items-center justify-center">
-        <div class="text-center p-10 max-w-2xl mx-4" style="background: rgba(0, 0, 0, 0.4); border-radius: 1rem; backdrop-filter: blur(10px);">
-            <h1 class="text-6xl lg:text-7xl font-bold mb-2 font-handwriting">Mr. Ian's Class Room</h1>
-            <p class="text-lg text-gray-300 mb-8">Click a button below to start class or get the link for your student.</p>
+        <!-- THIS IS THE CHANGE: The dark box style has been removed -->
+        <div class="text-center p-10 max-w-2xl mx-4">
+            <h1 class="text-6xl lg:text-7xl font-bold mb-2 font-handwriting text-shadow">Mr. Ian's Class Room</h1>
+            <p class="text-lg text-gray-200 mb-8 text-shadow">Click a button below to start class or get the link for your student.</p>
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
                 <button onclick="startClass()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
                     Start My Class
