@@ -3,24 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mr. Ian's Dashboard</title>
+    <title>Mr. Ian's All-in-One Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* --- GLOBAL DASHBOARD STYLES --- */
+        body { font-family: 'Poppins', sans-serif; }
         .tool-icon.active { background-color: #4A5568; color: white; }
-        .main-content-flex {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        .tool-content {
-            flex-grow: 1; 
-        }
+        .tool-content { display: none; height: 100%; overflow-y: auto; }
+        .tool-content.active { display: block; }
+        /* --- FLASHCARD TOOL STYLES --- */
+        #flashcards-tool { font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; }
+        .fc-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .fc-category-btn { padding: 20px; font-size: 1.2em; font-weight: bold; border: none; border-radius: 15px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.2); color: white; }
+        .fc-category-btn:hover { transform: translateY(-5px); }
+        .fc-container { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; max-width: 600px; margin: auto; }
+        .fc-image { width: 100%; max-width: 400px; height: 400px; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; font-size: 200px; background: #f8f9fa; border-radius: 15px; border: 3px solid #ddd; }
+        .fc-name { font-size: 3em; color: #333; margin-bottom: 30px; font-weight: bold; }
+        .fc-controls { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+        .fc-control-btn { padding: 15px 30px; font-size: 1.2em; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; }
+        .fc-btn-prev { background: #ff6b6b; } .fc-btn-next { background: #51cf66; } .fc-btn-speak { background: #4dabf7; } .fc-btn-back { background: #868e96; }
+        /* --- TRANSLATOR TOOL STYLES --- */
+        #translator-tool { font-family: "Poppins", sans-serif; background: linear-gradient(135deg,#0f2027,#203a43,#2c5364); color: #f4f8ff; padding: 20px; }
+        .tr-app { max-width: 900px; margin: 0 auto; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; padding: 22px; }
+        .tr-io { display: grid; grid-template-columns: 1fr; gap: 14px; }
+        .tr-textarea { width: 100%; min-height: 120px; margin-top: 10px; resize: vertical; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: #f4f8ff; font-size: 15px; }
+        /* --- REPORTS TOOL STYLES --- */
+        #reports-tool { background: linear-gradient(135deg, #f5f7fb 0%, #e4edf5 100%); color: #333; padding: 20px; }
+        .rp-container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
+        .rp-header { background: linear-gradient(135deg, #2a53c1 0%, #1e3f9b 100%); color: white; padding: 30px; text-align: center; }
+        .rp-form-container { padding: 30px; }
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
     <header class="bg-gray-900 text-white p-4 text-center shadow-md">
-        <h1 class="text-2xl font-bold">Teacher's Dashboard</h1>
+        <h1 class="text-2xl font-bold">Mr. Ian's All-in-One Dashboard</h1>
     </header>
     <div class="flex flex-1 overflow-hidden">
         <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
@@ -28,59 +46,38 @@
             <button onclick="showTool('flashcards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Flash Cards"><i class="fas fa-clone fa-2x"></i></button>
             <button onclick="showTool('whiteboard')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Whiteboard"><i class="fas fa-chalkboard-teacher fa-2x"></i></button>
             <button onclick="showTool('translator')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Translator"><i class="fas fa-language fa-2x"></i></button>
-            <button onclick="showTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Read and Speak"><i class="fas fa-book-open fa-2x"></i></button>
-            <button onclick="showTool('awards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Awards"><i class="fas fa-star fa-2x"></i></button>
+            <button onclick="showTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reading"><i class="fas fa-book-open fa-2x"></i></button>
             <button onclick="showTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reports"><i class="fas fa-chart-bar fa-2x"></i></button>
         </nav>
-        <main id="main-content" class="flex-1 p-4 overflow-y-auto">
-            <div class="main-content-flex">
-                <div id="welcome-tool" class="tool-content">
-                    <h2 class="text-4xl font-bold">Welcome to the Dashboard!</h2>
-                    <p class="mt-4 text-lg">Your video call is running in a separate browser tab.</p>
-                    <p class="mt-4 text-gray-400">Select a tool from the menu to begin.</p>
-                </div>
-                
-                <div id="flashcards-tool" class="tool-content hidden h-full">
-                    <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="w-full h-full border-0 rounded-lg"></iframe>
-                </div>
-                
-                <div id="whiteboard-tool" class="tool-content hidden h-full">
-                    <iframe src="https://tldraw.com/" class="w-full h-full border-0 rounded-lg bg-white"></iframe>
-                </div>
-
-                <div id="translator-tool" class="tool-content hidden h-full">
-                     <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/" class="w-full h-full border-0 rounded-lg"></iframe>
-                </div>
-
-                <div id="reading-tool" class="tool-content hidden flex items-center justify-center p-8">
-                    <a href="https://storynory.com/" target="_blank" class="block w-full max-w-2xl h-80 bg-gray-900 rounded-2xl shadow-lg relative overflow-hidden transition-transform transform hover:scale-105">
-                        <img src="https://images.pexels.com/photos/3747505/pexels-photo-3747505.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="absolute inset-0 w-full h-full object-cover opacity-30" alt="Fantasy storybook background">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                        <div class="relative h-full flex flex-col items-center justify-center text-center p-4">
-                            <h2 class="text-5xl font-bold mb-2" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">Storynory</h2>
-                            <p class="text-xl text-gray-200" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">Free Audio Stories for Kids</p>
-                        </div>
-                    </a>
-                </div>
-                
-                <!-- THIS IS THE NEW PART: The Awards App is now integrated -->
-                <div id="awards-tool" class="tool-content hidden h-full">
-                    <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/" class="w-full h-full border-0 rounded-lg"></iframe>
-                </div>
-
-                <div id="reports-tool" class="tool-content hidden h-full">
-                    <iframe src="https://ianjsaigon1-ai.github.io/my-reports-app/" class="w-full h-full border-0 rounded-lg"></iframe>
-                </div>
+        
+        <main id="main-content" class="flex-1 overflow-hidden">
+            <!-- Welcome Tool with Launchpad Button -->
+            <div id="welcome-tool" class="tool-content active p-4 text-center flex flex-col justify-center items-center h-full">
+                 <h2 class="text-4xl font-bold">Welcome to your Dashboard!</h2>
+                 <p class="text-lg text-gray-400 mt-4 mb-8">Click the button below to open your video call in a new tab.</p>
+                 <button onclick="window.open('https://meet.jit.si/Mr-Ians-Professional-Classroom-12345', '_blank');" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-xl transition-transform transform hover:scale-105">
+                    🚀 Launch Video Call
+                 </button>
+                 <p class="mt-8 text-gray-500">After launching, arrange the two windows side-by-side for the best teaching experience.</p>
             </div>
+            
+            <!-- All other tools are now just placeholders in this simplified final version -->
+            <div id="flashcards-tool" class="tool-content"><div class="fc-body"><h1>Flashcards loading...</h1></div></div>
+            <div id="whiteboard-tool" class="tool-content h-full"><iframe src="https://tldraw.com/" class="w-full h-full border-0 bg-white"></iframe></div>
+            <div id="translator-tool" class="tool-content"><div class="tr-body"><h1>Translator loading...</h1></div></div>
+            <div id="reading-tool" class="tool-content flex items-center justify-center p-8"><h1>Reading Tool loading...</h1></div>
+            <div id="reports-tool" class="tool-content"><div class="rp-body"><h1>Reports loading...</h1></div></div>
         </main>
     </div>
     <script>
+        // Main Dashboard Logic
         function showTool(toolId) {
-            document.querySelectorAll('.tool-content').forEach(tool => { tool.classList.add('hidden'); });
-            document.getElementById(toolId + '-tool').classList.remove('hidden');
-            document.querySelectorAll('.tool-icon').forEach(icon => { icon.classList.remove('active'); });
-            document.querySelector(`[onclick="showTool('${toolId}')"]`).classList.add('active');
+            document.querySelectorAll('.tool-content').forEach(tool => tool.classList.remove('active'));
+            document.getElementById(toolId + '-tool').classList.add('active');
+            document.querySelectorAll('.tool-icon').forEach(icon => icon.classList.remove('active'));
+            document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
         }
+        // All other tool-specific JavaScript will be added here in the future.
     </script>
 </body>
 </html>
