@@ -9,14 +9,19 @@
     <style>
         body { font-family: 'Poppins', sans-serif; }
         .font-handwriting { font-family: 'Patrick Hand', cursive; }
+        
+        /* THIS IS THE FIX: Using the permanent link for YOUR chosen image */
         .bg-classroom { 
             background-color: #1a202c; 
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.imgur.com/v8r2MS9.jpg'); 
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://i.imgur.com/m4J8v2t.jpeg'); 
             background-size: cover; 
             background-position: center;
             background-attachment: fixed;
         }
-        .text-shadow { text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8); }
+        
+        .text-shadow {
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+        }
     </style>
 </head>
 <body class="bg-classroom text-white">
@@ -25,7 +30,7 @@
             <h1 class="text-6xl lg:text-7xl font-bold mb-2 font-handwriting text-shadow">Mr. Ian's Class Room</h1>
             <p class="text-lg text-gray-200 mb-8 text-shadow">Click the button below to enter your teaching dashboard.</p>
             
-            <!-- A simple, unbreakable link to the classroom. -->
+            <!-- THIS IS THE FIX: A simple, reliable link. No JavaScript. -->
             <a href="classroom.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105">
                 Enter Classroom
             </a>
