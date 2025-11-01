@@ -10,12 +10,11 @@
         body { font-family: 'Poppins', sans-serif; }
         .font-handwriting { font-family: 'Patrick Hand', cursive; }
         
-        /* THIS IS THE FIX: Using the permanent, reliable background link */
-        bg-classroom { 
+        .bg-classroom { 
             background-color: #1a202c; 
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('my-classroom-8953770.jpg'); 
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://pixabay.com/get/gaa1cf70c7933f59ef391d693911edfb24aeaa0e39d43327dde878f3019d7ea74fd09ddc881e31815e34512eeaef2be82.jpg'); 
             background-size: cover; 
-            background-position: center; 
+            background-position: center;
             background-attachment: fixed;
         }
         
@@ -25,6 +24,7 @@
             display: flex; align-items: center; justify-content: center;
         }
         
+        /* Add a subtle shadow to the text to make it stand out */
         .text-shadow {
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
         }
@@ -32,6 +32,7 @@
 </head>
 <body class="bg-classroom text-white">
     <div class="min-h-screen flex items-center justify-center">
+        <!-- THIS IS THE CHANGE: The dark box style has been removed -->
         <div class="text-center p-10 max-w-2xl mx-4">
             <h1 class="text-6xl lg:text-7xl font-bold mb-2 font-handwriting text-shadow">Mr. Ian's Class Room</h1>
             <p class="text-lg text-gray-200 mb-8 text-shadow">Click a button below to start class or get the link for your student.</p>
@@ -77,9 +78,7 @@
         function startClass() {
             window.open(VIDEO_CALL_URL, '_blank');
             window.location.href = 'classroom.html';
-    
         }
     </script>
 </body>
 </html>
-
