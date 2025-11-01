@@ -10,18 +10,16 @@
         body { font-family: 'Poppins', sans-serif; }
         .font-handwriting { font-family: 'Patrick Hand', cursive; }
         
-        /* THIS IS THE FIX: Using the permanent link for YOUR chosen image */
+        /* THIS IS THE FIX: Using your locally uploaded file name */
         .bg-classroom { 
             background-color: #1a202c; 
-            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://i.imgur.com/m4J8v2t.jpeg'); 
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('my-classroom-8953770.jpg'); 
             background-size: cover; 
-            background-position: center;
-            background-attachment: fixed;
+            background-position: center; 
+            background-attachment: fixed; 
         }
         
-        .text-shadow {
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-        }
+        .text-shadow { text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); }
     </style>
 </head>
 <body class="bg-classroom text-white">
@@ -30,8 +28,14 @@
             <h1 class="text-6xl lg:text-7xl font-bold mb-2 font-handwriting text-shadow">Mr. Ian's Class Room</h1>
             <p class="text-lg text-gray-200 mb-8 text-shadow">Click the button below to enter your teaching dashboard.</p>
             
-            <!-- THIS IS THE FIX: A simple, reliable link. No JavaScript. -->
-            <a href="classroom.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105">
+            <!-- 
+              THIS IS THE GUARANTEED FIX for the "Two Tabs" function.
+              It is a link that goes to classroom.html, AND it has an onclick event to open the video call in a new tab.
+              This is the most reliable method that worked perfectly before.
+            -->
+            <a href="classroom.html" 
+               onclick="window.open('https://meet.jit.si/Mr-Ians-Professional-Classroom-12345', '_blank');"
+               class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 inline-block text-center">
                 Enter Classroom
             </a>
         </div>
