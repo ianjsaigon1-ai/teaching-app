@@ -9,7 +9,8 @@
     <style>
         .tool-icon.active { background-color: #4A5568; color: white; }
         .tool-content { display: none; }
-        .tool-content.active { display: flex; flex-direction: column; }
+        /* Use flexbox for active tool to ensure its children can fill height */
+        .tool-content.active { display: flex; flex-direction: column; height: 100%;}
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
@@ -29,7 +30,7 @@
         
         <main id="main-content" class="flex-1 overflow-y-auto">
             <!-- THIS IS THE NEW, RELIABLE LAUNCHPAD -->
-            <div id="welcome-tool" class="tool-content active p-4 text-center justify-center items-center h-full">
+            <div id="welcome-tool" class="tool-content active p-4 text-center justify-center items-center">
                 <h2 class="text-4xl font-bold">Welcome to the Dashboard!</h2>
                 <p class="text-lg text-gray-400 mt-4 mb-8">Click the button below to open your video call in a new tab.</p>
                 <button onclick="window.open('https://meet.jit.si/Mr-Ians-Professional-Classroom-12345', '_blank');" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-xl transition-transform transform hover:scale-105">
@@ -58,7 +59,7 @@
                     </div>
                 </a>
             </div>
-            
+
             <div id="awards-tool" class="tool-content h-full">
                 <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/" class="w-full h-full border-0"></iframe>
             </div>
