@@ -1,25 +1,22 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mr. Ian's Class Room</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; }
         .font-handwriting { font-family: 'Patrick Hand', cursive; }
-        
-        /* This uses your locally uploaded background file */
         .bg-classroom { 
             background-color: #1a202c; 
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('my-classroom-8953770.jpg'); 
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://i.imgur.com/v8r2MS9.jpg'); 
             background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed; 
+            background-position: center;
+            background-attachment: fixed;
         }
-        
-        .text-shadow { text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); }
+        .text-shadow { text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8); }
     </style>
 </head>
 <body class="bg-classroom text-white">
@@ -28,14 +25,8 @@
             <h1 class="text-6xl lg:text-7xl font-bold mb-2 font-handwriting text-shadow">Mr. Ian's Class Room</h1>
             <p class="text-lg text-gray-200 mb-8 text-shadow">Click the button below to enter your teaching dashboard.</p>
             
-            <!-- 
-              THIS IS THE GUARANTEED FIX.
-              It is a link that goes to classroom.html, AND it has an onclick event to open the video call in a new tab.
-              This is the most reliable method that you had before.
-            -->
-            <a href="classroom.html" 
-               onclick="window.open('https://meet.jit.si/Mr-Ians-Professional-Classroom-12345', '_blank');"
-               class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 inline-block text-center">
+            <!-- A simple, unbreakable link to the classroom. -->
+            <a href="classroom.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105">
                 Enter Classroom
             </a>
         </div>
