@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <style>
         .tool-icon.active { background-color: #4A5568; color: white; }
         .tool-content { display: none; }
-        .tool-content.active { display: flex; flex-direction: column; height: 100%;}
+        .tool-content.active { display: flex; flex-direction: column; height: 100vh; /* Make sure it can fill the viewport height */ }
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
@@ -26,14 +26,14 @@
             <button onclick="showTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reports"><i class="fas fa-chart-bar fa-2x"></i></button>
         </nav>
         
-        <main id="main-content" class="flex-1 overflow-y-auto">
-            <div id="flashcards-tool" class="tool-content active h-full">
+        <main id="main-content" class="flex-1 overflow-hidden">
+            <div id="flashcards-tool" class="tool-content active">
                 <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="w-full h-full border-0"></iframe>
             </div>
-            <div id="whiteboard-tool" class="tool-content h-full">
+            <div id="whiteboard-tool" class="tool-content">
                 <iframe src="https://tldraw.com/" class="w-full h-full border-0 bg-white"></iframe>
             </div>
-            <div id="translator-tool" class="tool-content h-full">
+            <div id="translator-tool" class="tool-content">
                  <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/" class="w-full h-full border-0"></iframe>
             </div>
             <div id="reading-tool" class="tool-content items-center justify-center p-8">
@@ -44,10 +44,10 @@
                     </div>
                 </a>
             </div>
-            <div id="awards-tool" class="tool-content h-full">
+            <div id="awards-tool" class="tool-content">
                 <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/" class="w-full h-full border-0"></iframe>
             </div>
-            <div id="reports-tool" class="tool-content h-full">
+            <div id="reports-tool" class="tool-content">
                 <iframe src="https://ianjsaigon1-ai.github.io/my-reports-app/" class="w-full h-full border-0"></iframe>
             </div>
         </main>
