@@ -28,12 +28,15 @@
     <div class="min-h-screen flex items-center justify-center">
         <div class="text-center p-10 max-w-2xl mx-4">
             <h1 class="text-6xl lg:text-7xl font-bold mb-2 font-handwriting text-shadow">Mr. Ian's Class Room</h1>
-            <p class="text-lg text-gray-200 mb-8 text-shadow">Click a button below to start class or get the link for your student.</p>
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <button onclick="startClass()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
+            <p class="text-lg text-gray-200 mb-8 text-shadow">Click a button below to start class or share the link.</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 flex-wrap">
+                <button onclick="startClass()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105">
                     🚀 Start My Class
                 </button>
-                <button onclick="getStudentLink()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
+                <button onclick="openSplitView()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105">
+                    🖥️ Open Split-Screen Mode
+                </button>
+                <button onclick="getStudentLink()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105">
                     📋 Get Student Link
                 </button>
             </div>
@@ -44,7 +47,7 @@
     <div id="student-link-modal" class="modal-overlay hidden">
         <div class="bg-white text-gray-800 rounded-lg shadow-xl p-8 max-w-md text-left">
             <h2 class="text-2xl font-bold mb-4">Link Copied!</h2>
-            <p class="mb-4">Paste this entire message to your student:</p>
+            <p class="mb-4">Paste this message to your student:</p>
             <div class="bg-gray-100 p-4 rounded-md border border-gray-300">
                 <p class="font-mono text-sm">
                     Here is the link for our class!<br><br>
@@ -62,6 +65,7 @@
 
     <script>
         const VIDEO_CALL_URL = "https://meet.jit.si/Mr-Ians-Professional-Classroom-12345";
+        const DASHBOARD_URL = "TeachingAppAI36CRworking.html";
         const studentLinkModal = document.getElementById('student-link-modal');
         const videoLinkDisplay = document.getElementById('video-link-display');
 
@@ -76,14 +80,16 @@
         }
 
         function startClass() {
-            // Open Jitsi Meet in a new tab
             const newTab = window.open(VIDEO_CALL_URL, '_blank');
             if (newTab) {
-                // If successful, load the classroom tools
-                window.location.href = 'TeachingAppAI36CRworking.html';
+                window.location.href = DASHBOARD_URL;
             } else {
-                alert("⚠️ Please allow pop-ups for this site so your video call can open.");
+                alert("⚠️ Please allow pop-ups for this site to open your video call.");
             }
+        }
+
+        function openSplitView() {
+            window.location.href = "splitview.html";
         }
     </script>
 </body>

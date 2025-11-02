@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split-Screen Teaching Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; }
+        iframe { border: none; }
+        #left-pane, #right-pane { height: 100vh; }
+        #left-pane { width: 50%; background-color: #000; }
+        #right-pane { width: 50%; background-color: #1a202c; }
+        #container { display: flex; height: 100vh; }
+        #toolbar { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: white; padding: 6px 14px; border-radius: 10px; font-family: sans-serif; }
+        #toolbar button { background: #2b6cb0; border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin: 0 4px; }
+        #toolbar button:hover { background: #3182ce; }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <button onclick="goHome()">🏠 Back to Main Page</button>
+        <button onclick="refreshAll()">🔄 Refresh Both</button>
+    </div>
+
+    <div id="container">
+        <iframe id="left-pane" src="https://meet.jit.si/Mr-Ians-Professional-Classroom-12345"></iframe>
+        <iframe id="right-pane" src="TeachingAppAI36CRworking.html"></iframe>
+    </div>
+
+    <script>
+        function goHome() {
+            window.location.href = "TeachingAppAI36INDworking.html";
+        }
+        function refreshAll() {
+            document.getElementById('left-pane').contentWindow.location.reload();
+            document.getElementById('right-pane').contentWindow.location.reload();
+        }
+    </script>
+</body>
+</html>
