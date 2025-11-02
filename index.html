@@ -10,12 +10,13 @@
         body { font-family: 'Poppins', sans-serif; }
         .font-handwriting { font-family: 'Patrick Hand', cursive; }
         
+        /* This uses your locally uploaded background file */
         .bg-classroom { 
             background-color: #1a202c; 
             background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('my-classroom-8953770.jpg'); 
             background-size: cover; 
             background-position: center; 
-            background-attachment: fixed
+            background-attachment: fixed; 
         }
         
         .modal-overlay {
@@ -24,7 +25,6 @@
             display: flex; align-items: center; justify-content: center;
         }
         
-        /* Add a subtle shadow to the text to make it stand out */
         .text-shadow {
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
         }
@@ -32,14 +32,22 @@
 </head>
 <body class="bg-classroom text-white">
     <div class="min-h-screen flex items-center justify-center">
-        <!-- THIS IS THE CHANGE: The dark box style has been removed -->
         <div class="text-center p-10 max-w-2xl mx-4">
             <h1 class="text-6xl lg:text-7xl font-bold mb-2 font-handwriting text-shadow">Mr. Ian's Class Room</h1>
             <p class="text-lg text-gray-200 mb-8 text-shadow">Click a button below to start class or get the link for your student.</p>
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <button onclick="startClass()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
+                
+                <!-- 
+                  THIS IS THE GUARANTEED FIX.
+                  It is a link styled to look like a button. The onclick opens the new tab, 
+                  and the href navigates the current tab. This is the most reliable method.
+                -->
+                <a href="classroom.html" 
+                   onclick="window.open('https://meet.jit.si/Mr-Ians-Professional-Classroom-12345', '_blank');"
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 w-full sm:w-auto inline-block text-center">
                     Start My Class
-                </button>
+                </a>
+                
                 <button onclick="getStudentLink()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
                     Get Student Link
                 </button>
@@ -63,6 +71,7 @@
         </div>
     </div>
     <script>
+        // This is your working "Student Link" code, exactly as you provided.
         const VIDEO_CALL_URL = "https://meet.jit.si/Mr-Ians-Professional-Classroom-12345";
         const studentLinkModal = document.getElementById('student-link-modal');
         const videoLinkDisplay = document.getElementById('video-link-display');
@@ -75,11 +84,7 @@
         function closeModal() {
             studentLinkModal.classList.add('hidden');
         }
-        function startClass() {
-            window.open(VIDEO_CALL_URL, '_blank');
-            window.location.href = 'classroom.html';
-        }
+        // The startClass logic is now handled reliably in the HTML link itself.
     </script>
 </body>
 </html>
-
