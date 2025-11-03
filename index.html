@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🌐 Live Translator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--primary:#00c6ff; --secondary:#0072ff; --bg-gradient: linear-gradient(135deg,#0f2027,#203a43,#2c5364); --glass: rgba(255,255,255,0.06); --border: rgba(255,255,255,0.14); --muted: #b5c1d4; --text: #f4f8ff;}
+  body{font-family:"Poppins",sans-serif; background:var(--bg-gradient); color:var(--text); margin:0; padding:20px; display:flex; justify-content:center; align-items:center; min-height:100vh;}
+  .app{width:95%; max-width:900px; background:var(--glass); border:1px solid var(--border); border-radius:16px; padding:25px; box-shadow:0 8px 32px rgba(0,0,0,0.3); backdrop-filter:blur(12px);}
+  .lang-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; font-size:1.5em; font-weight:600;}
+  .swap-btn{font-size:1.8em; cursor:pointer; background:none; border:none; color:var(--text); transition:transform 0.3s;}
+  .swap-btn:hover{transform:scale(1.2) rotate(180deg);}
+  textarea{width:100%; height:150px; background:rgba(255,255,255,0.1); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:12px; font-size:16px; margin-bottom:15px; resize:vertical;}
+  textarea:focus{outline:none; border-color:var(--primary);}
+  .controls{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-bottom:15px;}
+  button, select{border:none; border-radius:10px; padding:10px 14px; font-size:14px; cursor:pointer; color:#fff; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:all 0.3s ease;}
+  button:hover, select:hover{filter:brightness(1.15);}
+  .mic{background:linear-gradient(90deg, #6a48d7, #9d50bb);}
+  .mic.active{background:linear-gradient(90deg, #ff6b6b, #ee5a24);}
+  .status{text-align:center; margin-top:10px; font-size:14px; color:var(--muted); min-height:20px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="lang-header">
+    <span id="sourceLangLabel">English</span>
+    <button id="swapBtn" class="swap-btn">⇄</button>
+    <span id="targetLangLabel">Tiếng Việt</span>
+  </div>
+  <textarea id="inputText" placeholder="Type or speak in the source language..."></textarea>
+  <textarea id="outputText" readonly placeholder="Translation appears here..."></textarea>
+  <div class="controls">
+    <button id="micBtn" class="mic">🎤 Start Mic</button>
+    <button id="speakIn">▶ Speak Input</button>
+    <button id="speakOut">🔊 Speak Output</button>
+  </div>
+  <div class="status" id="statusText">Ready 🎧</div>
+</div>
+<script>
+const statusEl=document.getElementById("statusText"),inputEl=document.getElementById("inputText"),outputEl=document.getElementById("outputText"),micBtn=document.getElementById("micBtn"),swapBtn=document.getElementById("swapBtn"),sourceLangLabel=document.getElementById("sourceLangLabel"),targetLangLabel=document.getElementById("targetLangLabel");
+let sourceLang='en',targetLang='vi',recognition,isListening=!1,synth=window.speechSynthesis;
+function speak(e,t){if(!e.trim())return;const n=new SpeechSynthesisUtterance(e);n.lang=t,synth.cancel(),synth.speak(n)}
+async function translateText(e,t,n){if(!e.trim())return"";try{const a=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(e)}&langpair=${t}|${n}`,o=await fetch(a),s=await o.json();if(s.responseData)return s.responseData.translatedText}catch(e){}return"[Translation Error]"}
+let debounce;inputEl.addEventListener("input",()=>{clearTimeout(debounce),debounce=setTimeout(async()=>{const e=inputEl.value.trim();if(!e)return outputEl.value="";statusEl.textContent="Translating...";const t=await translateText(e,sourceLang,targetLang);outputEl.value=t,statusEl.textContent="✅ Translated"},500)});
+function swapLanguages(){
+    // THIS IS THE FIX: Correctly swaps the source and target languages
+    [sourceLang, targetLang] = [targetLang, sourceLang]; 
+    [sourceLangLabel.textContent, targetLangLabel.textContent] = [targetLangLabel.textContent, sourceLangLabel.textContent];
+    [inputEl.value, outputEl.value] = [outputEl.value, inputEl.value];
+    if (isListening) { // If mic is on, restart it with the new language
+        stopListening();
+        startListening();
+    }
+    inputEl.dispatchEvent(new Event("input")); // Retranslate the text
+}
+swapBtn.onclick=swapLanguages;
+micBtn.onclick=()=>{isListening?stopListening():startListening()};
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SpeechRecognition){recognition=new SpeechRecognition,recognition.continuous=!0,recognition.interimResults=!0,recognition.onresult=e=>{let t="",n="";for(let a=e.resultIndex;a<e.results.length;a++)e.results[a].isFinal?t+=e.results[a][0].transcript:n+=e.results[a][0].transcript;inputEl.value=t+n,e.results[e.results.length-1].isFinal&&(inputEl.dispatchEvent(new Event("input")))}}else micBtn.disabled=!0,statusEl.textContent="Speech recognition not supported.";
+function startListening(){isListening=!0,micBtn.classList.add("active"),micBtn.textContent="🛑 Stop Mic",recognition.lang=sourceLang==="en"?"en-US":"vi-VN",recognition.start()}
+function stopListening(){isListening=!1,micBtn.classList.remove("active"),micBtn.textContent="🎤 Start Mic",recognition.stop()}
+document.getElementById("speakIn").onclick=()=>speak(inputEl.value,sourceLang==="en"?"en-US":"vi-VN");
+document.getElementById("speakOut").onclick=()=>speak(outputEl.value,targetLang==="en"?"en-US":"vi-VN");
+</script>
+</body>
+</html>
