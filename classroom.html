@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr. Ian's Split-Screen Classroom</title>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; }
+    #container { display: flex; height: 100vh; width: 100%; }
+    iframe { border: none; height: 100%; background-color: #1F2937; }
+    #divider {
+      width: 8px;
+      background-color: #374151;
+      cursor: col-resize;
+      transition: background-color 0.2s;
+    }
+    #divider:hover { background-color: #4B5563; }
+    #toolbar {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(17, 24, 39, 0.8);
+      backdrop-filter: blur(5px);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 12px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    #toolbar button {
+      background: #3B82F6;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 0 5px;
+      font-weight: 600;
+    }
+    #toolbar button:hover { background: #2563EB; }
+  </style>
+</head>
+<body>
+  <div id="toolbar">
+    <button onclick="goHome()">🏠 Welcome Page</button>
+    <button onclick="refreshDashboard()">🔄 Refresh Tools</button>
+  </div>
+
+  <div id="container">
+    <!-- Pane 1: The reliable Whereby Video Call -->
+    <iframe id="left-pane" 
+            src="https://whereby.com/mr-ians-classroom?embed&chat=on&people=on&background=off" 
+            style="width: 50%;"
+            allow="camera; microphone; fullscreen; display-capture">
+    </iframe>
+    
+    <div id="divider"></div>
+    
+    <!-- Pane 2: Your Teacher's Toolbelt Dashboard -->
+    <iframe id="right-pane" src="dashboard.html" style="width: 50%;"></iframe>
+  </div>
+
+  <script>
+    const divider = document.getElementById('divider');
+    const left = document.getElementById('left-pane');
+    const right = document.getElementById('right-pane');
+    let isDragging = false;
+
+    divider.addEventListener('mousedown', () => { isDragging = true; document.body.style.cursor = 'col-resize'; });
+    document.addEventListener('mouseup', () => { isDragging = false; document.body.style.cursor = 'default'; });
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      if (e.clientX < 100 || e.clientX > window.innerWidth - 100) return;
+      
+      const totalWidth = window.innerWidth;
+      const leftWidth = e.clientX;
+      const rightWidth = totalWidth - leftWidth - divider.offsetWidth;
+      left.style.width = `${leftWidth}px`;
+      right.style.width = `${rightWidth}px`;
+    });
+
+    function goHome() { window.location.href = "index.html"; }
+    function refreshDashboard() { right.contentWindow.location.reload(); }
+  </script>
+</body>
+</html>
