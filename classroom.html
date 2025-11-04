@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mr. Ian's Classroom Dashboard</title>
+  <title>Mr. Ian's Interactive Classroom</title>
   <style>
     * {
       margin: 0;
@@ -16,10 +16,11 @@
       background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
       color: white;
       min-height: 100vh;
+      overflow-x: hidden;
     }
     
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 20px;
     }
@@ -35,202 +36,328 @@
       margin-bottom: 10px;
     }
     
-    .subtitle {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-    
-    .dashboard {
+    .main-dashboard {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 300px 1fr;
       gap: 20px;
-      margin-bottom: 30px;
+      height: 80vh;
     }
     
-    .panel {
+    .sidebar {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .content-area {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border-radius: 15px;
       padding: 25px;
       border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      flex-direction: column;
     }
     
-    .panel h2 {
-      margin-bottom: 20px;
-      font-size: 1.5rem;
+    .tool-button {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-    
-    .big-button {
-      display: block;
-      width: 100%;
-      padding: 20px;
-      background: #10B981;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin: 10px 0;
-      transition: transform 0.2s, background 0.2s;
-    }
-    
-    .big-button:hover {
-      transform: translateY(-2px);
-      background: #059669;
-    }
-    
-    .video-button {
-      background: #EF4444;
-    }
-    
-    .video-button:hover {
-      background: #DC2626;
-    }
-    
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 15px;
-      margin-top: 20px;
-    }
-    
-    .tool-card {
+      width: 100%;
+      padding: 15px;
       background: rgba(255, 255, 255, 0.15);
-      padding: 20px;
+      border: none;
       border-radius: 10px;
-      text-align: center;
-      text-decoration: none;
       color: white;
-      transition: transform 0.2s, background 0.2s;
+      font-size: 1.1rem;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
     }
     
-    .tool-card:hover {
-      transform: translateY(-3px);
+    .tool-button:hover {
       background: rgba(255, 255, 255, 0.25);
+      transform: translateX(5px);
+    }
+    
+    .tool-button.active {
+      background: #10B981;
     }
     
     .tool-icon {
-      font-size: 2rem;
-      margin-bottom: 10px;
+      font-size: 1.5rem;
+      width: 30px;
+      text-align: center;
     }
     
-    .instructions {
-      background: rgba(255, 255, 255, 0.1);
+    .tool-content {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+    }
+    
+    .tool-content.active {
+      display: flex;
+    }
+    
+    .tool-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .tool-header h2 {
+      font-size: 1.8rem;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .action-btn {
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .tool-frame {
+      flex: 1;
+      border: none;
       border-radius: 10px;
+      background: white;
+    }
+    
+    .external-link {
+      display: inline-block;
+      padding: 15px 25px;
+      background: #3B82F6;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: bold;
+      margin: 10px 0;
+      transition: transform 0.2s;
+    }
+    
+    .external-link:hover {
+      transform: translateY(-2px);
+      background: #2563EB;
+    }
+    
+    .video-section {
+      background: rgba(239, 68, 68, 0.2);
       padding: 20px;
+      border-radius: 10px;
       margin-top: 20px;
     }
     
-    .step {
-      margin: 15px 0;
-      padding-left: 25px;
-      position: relative;
+    .welcome-message {
+      text-align: center;
+      padding: 40px;
     }
     
-    .step:before {
-      content: "•";
-      position: absolute;
-      left: 10px;
-      color: #10B981;
-      font-size: 1.5rem;
+    .welcome-message h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
     }
     
-    @media (max-width: 768px) {
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>🎓 Mr. Ian's Classroom</h1>
-      <p class="subtitle">Your Teaching Dashboard - Everything in One Place</p>
+      <h1>🎓 Mr. Ian's Interactive Classroom</h1>
+      <p>Dashboard stays open while you teach - no more getting lost in tabs!</p>
     </header>
 
-    <div class="dashboard">
-      <!-- Video Conference Panel -->
-      <div class="panel">
-        <h2>🎥 Video Classroom</h2>
-        <p>Start your video conference (1 hour free):</p>
+    <div class="main-dashboard">
+      <!-- Sidebar with Tools -->
+      <div class="sidebar">
+        <h3>🎯 Teaching Tools</h3>
         
-        <a href="https://meet.google.com/new" target="_blank" class="big-button video-button">
-          🚀 Create Google Meet
-        </a>
-        
-        <div class="instructions">
-          <h3>Quick Guide:</h3>
-          <div class="step">Click "Create Google Meet" above</div>
-          <div class="step">Copy the meeting link</div>
-          <div class="step">Share with students</div>
-          <div class="step">Return here to use teaching tools</div>
-        </div>
-      </div>
-
-      <!-- Teaching Tools Panel -->
-      <div class="panel">
-        <h2>🛠️ Teaching Tools</h2>
-        <p>Click any tool to open it:</p>
-        
-        <div class="tools-grid">
-          <a href="https://ianjsaigon1-ai.github.io/flashcardsapp/" target="_blank" class="tool-card">
-            <div class="tool-icon">📋</div>
-            <div>Flash Cards</div>
-          </a>
-          
-          <a href="https://webwhiteboard.com/" target="_blank" class="tool-card">
-            <div class="tool-icon">🎨</div>
-            <div>Whiteboard</div>
-          </a>
-          
-          <a href="https://ianjsaigon1-ai.github.io/my-translator-app/" target="_blank" class="tool-card">
-            <div class="tool-icon">🔤</div>
-            <div>Translator</div>
-          </a>
-          
-          <a href="https://storynory.com/" target="_blank" class="tool-card">
-            <div class="tool-icon">📚</div>
-            <div>Reading</div>
-          </a>
-          
-          <a href="https://ianjsaigon1-ai.github.io/my-rewards-app/" target="_blank" class="tool-card">
-            <div class="tool-icon">⭐</div>
-            <div>Awards</div>
-          </a>
-          
-          <a href="https://ianjsaigon1-ai.github.io/my-reports-app/" target="_blank" class="tool-card">
-            <div class="tool-icon">📊</div>
-            <div>Reports</div>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="panel">
-      <h2>⚡ Quick Actions</h2>
-      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-        <a href="index.html" class="big-button" style="background: #6B7280; flex: 1; min-width: 200px;">
-          🏠 Back to Home
-        </a>
-        <button onclick="refreshPage()" class="big-button" style="background: #F59E0B; border: none; cursor: pointer; flex: 1; min-width: 200px;">
-          🔄 Refresh Page
+        <button class="tool-button active" onclick="showTool('welcome')">
+          <span class="tool-icon">🏠</span>
+          <span>Dashboard Home</span>
         </button>
+        
+        <button class="tool-button" onclick="showTool('video')">
+          <span class="tool-icon">🎥</span>
+          <span>Video Conference</span>
+        </button>
+        
+        <button class="tool-button" onclick="openTool('flashcards')">
+          <span class="tool-icon">📋</span>
+          <span>Flash Cards</span>
+        </button>
+        
+        <button class="tool-button" onclick="openTool('whiteboard')">
+          <span class="tool-icon">🎨</span>
+          <span>Whiteboard</span>
+        </button>
+        
+        <button class="tool-button" onclick="openTool('translator')">
+          <span class="tool-icon">🔤</span>
+          <span>Translator</span>
+        </button>
+        
+        <button class="tool-button" onclick="openTool('reading')">
+          <span class="tool-icon">📚</span>
+          <span>Reading</span>
+        </button>
+        
+        <button class="tool-button" onclick="openTool('awards')">
+          <span class="tool-icon">⭐</span>
+          <span>Awards</span>
+        </button>
+        
+        <button class="tool-button" onclick="openTool('reports')">
+          <span class="tool-icon">📊</span>
+          <span>Reports</span>
+        </button>
+
+        <div class="video-section">
+          <h4>🚀 Quick Video Setup</h4>
+          <button class="action-btn" onclick="startVideoConference()" style="width: 100%; margin-top: 10px;">
+            Start Google Meet
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="content-area">
+        <!-- Welcome Screen -->
+        <div id="welcome-tool" class="tool-content active">
+          <div class="welcome-message">
+            <h2>Welcome to Your Teaching Dashboard! 🎉</h2>
+            <p>This dashboard stays open while you teach. Click any tool to open it in a new tab.</p>
+            
+            <div class="feature-grid">
+              <div class="feature-card">
+                <div style="font-size: 2rem; margin-bottom: 10px;">🎥</div>
+                <h4>Video Conference</h4>
+                <p>1-hour free Google Meet sessions</p>
+              </div>
+              <div class="feature-card">
+                <div style="font-size: 2rem; margin-bottom: 10px;">📋</div>
+                <h4>Flash Cards</h4>
+                <p>Interactive learning cards</p>
+              </div>
+              <div class="feature-card">
+                <div style="font-size: 2rem; margin-bottom: 10px;">🎨</div>
+                <h4>Whiteboard</h4>
+                <p>Draw and explain concepts</p>
+              </div>
+              <div class="feature-card">
+                <div style="font-size: 2rem; margin-bottom: 10px;">🔤</div>
+                <h4>Translator</h4>
+                <p>Language translation tool</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Conference Guide -->
+        <div id="video-tool" class="tool-content">
+          <div class="tool-header">
+            <h2>🎥 Video Conference Setup</h2>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 20px;">Start Your Video Lesson</h3>
+            <p style="margin-bottom: 30px; font-size: 1.1rem;">Click below to create a Google Meet session. The dashboard will stay open so you can easily access teaching tools.</p>
+            
+            <button onclick="startVideoConference()" class="external-link" style="font-size: 1.3rem; padding: 20px 40px;">
+              🚀 Create Google Meet (1 Hour Free)
+            </button>
+            
+            <div style="margin-top: 40px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; max-width: 500px;">
+              <h4>💡 Teaching Tip:</h4>
+              <p>After starting the video call, keep this dashboard open in a separate window. Switch between video and tools easily!</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    function refreshPage() {
-      window.location.reload();
+    // Show/hide tools in the main area
+    function showTool(toolId) {
+      // Hide all tool contents
+      document.querySelectorAll('.tool-content').forEach(tool => {
+        tool.classList.remove('active');
+      });
+      
+      // Show selected tool
+      document.getElementById(toolId + '-tool').classList.add('active');
+      
+      // Update active button
+      document.querySelectorAll('.tool-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
     }
-    
-    // No external dependencies - everything is self-contained
+
+    // Open external tools in new tabs
+    function openTool(toolName) {
+      const urls = {
+        flashcards: 'https://ianjsaigon1-ai.github.io/flashcardsapp/',
+        whiteboard: 'https://webwhiteboard.com/',
+        translator: 'https://ianjsaigon1-ai.github.io/my-translator-app/',
+        reading: 'https://storynory.com/',
+        awards: 'https://ianjsaigon1-ai.github.io/my-rewards-app/',
+        reports: 'https://ianjsaigon1-ai.github.io/my-reports-app/'
+      };
+      
+      if (urls[toolName]) {
+        window.open(urls[toolName], '_blank');
+        
+        // Show a confirmation message
+        alert(`✅ ${toolName.charAt(0).toUpperCase() + toolName.slice(1)} opened in new tab!\n\n💡 Keep this dashboard open to switch between tools easily.`);
+      }
+    }
+
+    // Start video conference
+    function startVideoConference() {
+      window.open('https://meet.google.com/new', '_blank');
+      alert('🎥 Google Meet opening in new tab!\n\n📝 After creating your meeting:\n1. Copy the meeting link\n2. Share with students\n3. Return to this dashboard\n4. Use teaching tools while video runs');
+    }
+
+    // Make buttons work even when clicking on inner elements
+    document.querySelectorAll('.tool-button').forEach(button => {
+      button.addEventListener('click', function(e) {
+        if (e.target !== this) {
+          this.click();
+        }
+      });
+    });
   </script>
 </body>
 </html>
