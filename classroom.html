@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mr. Ian's Split-Screen Classroom</title>
+  <title>Mr. Ian's Classroom</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -13,7 +13,6 @@
       width: 8px;
       background-color: #374151;
       cursor: col-resize;
-      transition: background-color 0.2s;
     }
     #divider:hover { background-color: #4B5563; }
     #toolbar {
@@ -21,25 +20,21 @@
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(17, 24, 39, 0.8);
-      backdrop-filter: blur(5px);
+      background: rgba(17, 24, 39, 0.9);
       color: white;
-      padding: 8px 16px;
+      padding: 10px 20px;
       border-radius: 12px;
       z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       display: flex;
-      align-items: center;
       gap: 10px;
     }
     #toolbar button {
       background: #3B82F6;
       border: none;
       color: white;
-      padding: 8px 14px;
+      padding: 8px 16px;
       border-radius: 8px;
       cursor: pointer;
-      margin: 0 5px;
       font-weight: 600;
     }
     #toolbar button:hover { background: #2563EB; }
@@ -47,7 +42,7 @@
     .tool-content { display: none; height: 100%; }
     .tool-content.active { display: block; }
     .dashboard-iframe { width: 100%; height: 100%; border: none; }
-    #video-container { 
+    #video-guide { 
       width: 100%; 
       height: 100%; 
       background: #1a1a1a; 
@@ -59,44 +54,75 @@
       text-align: center;
       padding: 20px;
     }
-    .meet-iframe { width: 100%; height: 100%; border: none; }
-    .meet-setup {
+    .video-step {
       background: rgba(255,255,255,0.1);
-      padding: 20px;
-      border-radius: 10px;
+      padding: 25px;
+      border-radius: 12px;
+      margin: 15px 0;
       max-width: 500px;
+      width: 100%;
+    }
+    .big-button {
+      background: #10B981;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 10px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .big-button:hover {
+      background: #059669;
+    }
+    .meet-code {
+      background: #374151;
+      padding: 10px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0;
     }
   </style>
 </head>
 <body>
   <div id="toolbar">
-    <button onclick="goHome()">🏠 Welcome Page</button>
+    <button onclick="goHome()">🏠 Home</button>
     <button onclick="refreshTools()">🔄 Refresh Tools</button>
-    <button onclick="copyMeetLink()">📧 Copy Meet Link</button>
-    <button onclick="refreshMeet()">🔄 Refresh Meet</button>
+    <button onclick="openVideoInNewTab()">🎥 Open Video</button>
   </div>
 
   <div id="container">
-    <!-- Left: Google Meet Video Conference -->
+    <!-- Left: Simple Video Instructions -->
     <div id="left-pane" style="width: 50%;">
-      <div id="video-container">
-        <div id="meet-setup" class="meet-setup">
-          <h2 class="text-2xl font-bold mb-4">Google Meet Classroom</h2>
-          <p class="mb-4">1. First, create your Google Meet session:</p>
-          <a href="https://meet.google.com/new" target="_blank" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">
-            Create Google Meet
+      <div id="video-guide">
+        <h1 class="text-3xl font-bold mb-6">Video Classroom</h1>
+        
+        <div class="video-step">
+          <h2 class="text-xl font-bold mb-3">Step 1: Start Your Video Call</h2>
+          <p class="mb-4">Click the button below to create a Google Meet (1 hour free)</p>
+          <a href="https://meet.google.com/new" target="_blank" class="big-button">
+            🎥 Create Google Meet
           </a>
-          <p class="mb-4">2. Then paste your Meet URL here:</p>
-          <input type="text" id="meet-url" placeholder="https://meet.google.com/your-meeting-code" 
-                 class="w-full p-2 rounded bg-gray-700 text-white mb-4">
-          <button onclick="loadMeet()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
-            Load Google Meet
-          </button>
-          <div id="current-meet" class="mt-4 p-2 bg-blue-900 rounded hidden">
-            <p>Current Meet: <span id="current-meet-url" class="font-mono text-sm"></span></p>
+        </div>
+
+        <div class="video-step">
+          <h2 class="text-xl font-bold mb-3">Step 2: Share with Students</h2>
+          <p>Copy the meeting link from Google Meet and share it with your students</p>
+          <div class="meet-code" id="meet-code-display">
+            Your meeting link will appear here after creation
           </div>
         </div>
-        <iframe id="meet-iframe" class="meet-iframe" style="display: none;"></iframe>
+
+        <div class="video-step">
+          <h2 class="text-xl font-bold mb-3">Step 3: Teach!</h2>
+          <p>Use the teaching tools on the right while your video call runs in a separate tab</p>
+          <button onclick="openVideoInNewTab()" class="big-button" style="background: #3B82F6;">
+            📺 Open Video Tab
+          </button>
+        </div>
       </div>
     </div>
     
@@ -106,16 +132,29 @@
     <div id="right-pane" style="width: 50%; background: #1F2937;">
       <div class="bg-gray-800 text-white h-full flex flex-col">
         <header class="bg-gray-900 text-white p-4 text-center shadow-md">
-          <h1 class="text-2xl font-bold">Teacher's Tools</h1>
+          <h1 class="text-2xl font-bold">Teaching Tools</h1>
+          <p class="text-sm text-gray-400">Use these while video call runs in separate tab</p>
         </header>
         <div class="flex flex-1 overflow-hidden">
           <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
-            <button onclick="showTool('flashcards')" class="tool-icon active p-3 rounded-lg hover:bg-gray-700" title="Flash Cards"><i class="fas fa-clone fa-2x"></i></button>
-            <button onclick="showTool('whiteboard')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Whiteboard"><i class="fas fa-chalkboard-teacher fa-2x"></i></button>
-            <button onclick="showTool('translator')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Translator"><i class="fas fa-language fa-2x"></i></button>
-            <button onclick="showTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reading"><i class="fas fa-book-open fa-2x"></i></button>
-            <button onclick="showTool('awards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Awards"><i class="fas fa-star fa-2x"></i></button>
-            <button onclick="showTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reports"><i class="fas fa-chart-bar fa-2x"></i></button>
+            <button onclick="showTool('flashcards')" class="tool-icon active p-3 rounded-lg hover:bg-gray-700" title="Flash Cards">
+              <i class="fas fa-clone fa-2x"></i>
+            </button>
+            <button onclick="showTool('whiteboard')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Whiteboard">
+              <i class="fas fa-chalkboard-teacher fa-2x"></i>
+            </button>
+            <button onclick="showTool('translator')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Translator">
+              <i class="fas fa-language fa-2x"></i>
+            </button>
+            <button onclick="showTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reading">
+              <i class="fas fa-book-open fa-2x"></i>
+            </button>
+            <button onclick="showTool('awards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Awards">
+              <i class="fas fa-star fa-2x"></i>
+            </button>
+            <button onclick="showTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reports">
+              <i class="fas fa-chart-bar fa-2x"></i>
+            </button>
           </nav>
           
           <main id="main-content" class="flex-1 overflow-hidden">
@@ -152,21 +191,7 @@
     const divider = document.getElementById('divider');
     const left = document.getElementById('left-pane');
     const right = document.getElementById('right-pane');
-    const meetIframe = document.getElementById('meet-iframe');
-    const meetSetup = document.getElementById('meet-setup');
-    const meetUrlInput = document.getElementById('meet-url');
-    const currentMeetDiv = document.getElementById('current-meet');
-    const currentMeetUrl = document.getElementById('current-meet-url');
     let isDragging = false;
-
-    // Load saved Meet URL from localStorage
-    window.addEventListener('load', function() {
-      const savedMeetUrl = localStorage.getItem('meetUrl');
-      if (savedMeetUrl) {
-        meetUrlInput.value = savedMeetUrl;
-        loadMeet();
-      }
-    });
 
     divider.addEventListener('mousedown', () => { isDragging = true; document.body.style.cursor = 'col-resize'; });
     document.addEventListener('mouseup', () => { isDragging = false; document.body.style.cursor = 'default'; });
@@ -181,7 +206,9 @@
       right.style.width = `${rightWidth}px`;
     });
 
-    function goHome() { window.location.href = "index.html"; }
+    function goHome() { 
+      window.location.href = "index.html"; 
+    }
     
     function refreshTools() { 
       const activeTool = document.querySelector('.tool-content.active iframe');
@@ -195,44 +222,8 @@
       document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
     }
 
-    function loadMeet() {
-      const url = meetUrlInput.value.trim();
-      if (!url) {
-        alert('Please enter a Google Meet URL');
-        return;
-      }
-      
-      // Ensure it's a proper Google Meet URL
-      let finalUrl = url;
-      if (!url.startsWith('https://meet.google.com/')) {
-        finalUrl = 'https://meet.google.com/' + url.replace(/^.*\//, '');
-      }
-      
-      meetIframe.src = finalUrl;
-      meetIframe.style.display = 'block';
-      meetSetup.style.display = 'none';
-      
-      // Save to localStorage
-      localStorage.setItem('meetUrl', finalUrl);
-      currentMeetUrl.textContent = finalUrl;
-      currentMeetDiv.classList.remove('hidden');
-    }
-
-    function copyMeetLink() {
-      const url = meetUrlInput.value.trim() || localStorage.getItem('meetUrl');
-      if (url) {
-        navigator.clipboard.writeText(url).then(() => {
-          alert('Meet link copied to clipboard!\n\nShare with students: ' + url);
-        });
-      } else {
-        alert('Please load a Google Meet first');
-      }
-    }
-
-    function refreshMeet() {
-      if (meetIframe.src) {
-        meetIframe.src = meetIframe.src;
-      }
+    function openVideoInNewTab() {
+      window.open('https://meet.google.com/new', '_blank');
     }
 
     // Initialize
