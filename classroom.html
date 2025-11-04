@@ -43,15 +43,12 @@
       font-weight: 600;
     }
     #toolbar button:hover { background: #2563EB; }
-    #jitsi-container {
-      width: 100%;
-      height: 100%;
-      background-color: #1F2937;
-    }
     .tool-icon.active { background-color: #4A5568; color: white; }
     .tool-content { display: none; height: 100%; }
     .tool-content.active { display: block; }
     .dashboard-iframe { width: 100%; height: 100%; border: none; }
+    #video-container { width: 100%; height: 100%; background: #1a1a1a; }
+    #jitsi-iframe { width: 100%; height: 100%; border: none; }
   </style>
 </head>
 <body>
@@ -61,21 +58,28 @@
     <button onclick="toggleVideo()">🎥 Toggle Video</button>
     <button onclick="toggleAudio()">🎤 Toggle Audio</button>
     <button onclick="shareScreen()">🖥️ Share Screen</button>
+    <button onclick="copyInviteLink()">📧 Copy Invite Link</button>
   </div>
 
   <div id="container">
-    <!-- Left: Jitsi Video Conference -->
+    <!-- Left: Jitsi Video Conference - DIRECT IFRAME EMBED -->
     <div id="left-pane" style="width: 50%;">
-      <div id="jitsi-container"></div>
+      <div id="video-container">
+        <iframe id="jitsi-iframe" 
+                src="https://meet.jit.si/MrIansClassroom" 
+                allow="camera; microphone; display-capture">
+        </iframe>
+      </div>
     </div>
     
     <div id="divider"></div>
     
-    <!-- Right: Teaching Tools Dashboard (NO IFRAME) -->
+    <!-- Right: Teaching Tools Dashboard -->
     <div id="right-pane" style="width: 50%; background: #1F2937;">
       <div class="bg-gray-800 text-white h-full flex flex-col">
         <header class="bg-gray-900 text-white p-4 text-center shadow-md">
           <h1 class="text-2xl font-bold">Teacher's Tools</h1>
+          <p class="text-sm text-gray-400">Video: meet.jit.si/MrIansClassroom</p>
         </header>
         <div class="flex flex-1 overflow-hidden">
           <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
@@ -117,20 +121,12 @@
     </div>
   </div>
 
-  <!-- Jitsi Meet API -->
-  <script src="https://8x8.vc/vpaas-magic-cookie-1b6a14d5b1a34c6e9a3bc434b2d6c2b6/external_api.js"></script>
-  
   <script>
     const divider = document.getElementById('divider');
     const left = document.getElementById('left-pane');
     const right = document.getElementById('right-pane');
+    const jitsiIframe = document.getElementById('jitsi-iframe');
     let isDragging = false;
-    let api = null;
-
-    // Start Jitsi automatically when page loads
-    window.addEventListener('load', function() {
-      startJitsi();
-    });
 
     divider.addEventListener('mousedown', () => { isDragging = true; document.body.style.cursor = 'col-resize'; });
     document.addEventListener('mouseup', () => { isDragging = false; document.body.style.cursor = 'default'; });
@@ -146,6 +142,7 @@
     });
 
     function goHome() { window.location.href = "index.html"; }
+    
     function refreshTools() { 
       const activeTool = document.querySelector('.tool-content.active iframe');
       if (activeTool) activeTool.src = activeTool.src;
@@ -158,58 +155,29 @@
       document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
     }
 
-    // Jitsi Meet functions
-    function startJitsi() {
-      const domain = '8x8.vc';
-      const options = {
-        roomName: 'Mr-Ians-Classroom-' + Math.random().toString(36).substring(2, 7),
-        width: '100%',
-        height: '100%',
-        parentNode: document.getElementById('jitsi-container'),
-        configOverwrite: {
-          prejoinPageEnabled: true,
-          startWithAudioMuted: false,
-          startWithVideoMuted: false,
-          disableModeratorIndicator: false,
-          startScreenSharing: false,
-          enableEmailInStats: false,
-          defaultLanguage: 'en'
-        },
-        interfaceConfigOverwrite: {
-          SHOW_JITSI_WATERMARK: false,
-          SHOW_WATERMARK_FOR_GUESTS: false,
-          SHOW_BRAND_WATERMARK: false,
-          BRAND_WATERMARK_LINK: '',
-          SHOW_POWERED_BY: false,
-          SHOW_PROMOTIONAL_CLOSE_PAGE: false,
-          MOBILE_APP_PROMO: false,
-          HIDE_INVITE_MORE_HEADER: false
-        },
-        userInfo: {
-          displayName: 'Teacher'
-        }
-      };
-
-      api = new JitsiMeetExternalAPI(domain, options);
-    }
-
+    // Video controls - these will work once Jitsi is loaded
     function toggleVideo() {
-      if (api) {
-        api.executeCommand('toggleVideo');
-      }
+      // Jitsi commands don't work cross-origin, but we can show instructions
+      alert("Use the camera button in the Jitsi interface to toggle your video");
     }
 
     function toggleAudio() {
-      if (api) {
-        api.executeCommand('toggleAudio');
-      }
+      alert("Use the microphone button in the Jitsi interface to toggle your audio");
     }
 
     function shareScreen() {
-      if (api) {
-        api.executeCommand('toggleShareScreen');
-      }
+      alert("Use the share screen button in the Jitsi interface to share your screen");
     }
+
+    function copyInviteLink() {
+      const link = "https://meet.jit.si/MrIansClassroom";
+      navigator.clipboard.writeText(link).then(() => {
+        alert("Invite link copied to clipboard!\n\nShare this with students:\n" + link);
+      });
+    }
+
+    // Initialize
+    showTool('flashcards');
   </script>
 </body>
 </html>
