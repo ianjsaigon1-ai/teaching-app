@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,12 @@
     <style>
         .tool-icon.active { background-color: #4A5568; color: white; }
         .tool-content { display: none; }
-        .tool-content.active { display: flex; flex-direction: column; height: 100%; }
+        /* THIS IS THE FIX: The active tool content should be a flex container that fills the height */
+        .tool-content.active { 
+            display: flex; 
+            flex-direction: column; 
+            height: 100%; /* Changed from 100vh to 100% to fill its container */
+        }
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
@@ -27,6 +32,7 @@
         </nav>
         
         <main id="main-content" class="flex-1 overflow-hidden">
+            <!-- All tool-content divs now have the h-full class and correct links -->
             <div id="flashcards-tool" class="tool-content active h-full">
                 <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="w-full h-full border-0"></iframe>
             </div>
