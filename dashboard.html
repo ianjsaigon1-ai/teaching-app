@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,17 +9,17 @@
     <style>
         .tool-icon.active { background-color: #4A5568; color: white; }
         .tool-content { display: none; }
+        /* THIS IS THE FIX: The active tool content should be a flex container that fills the height */
         .tool-content.active { 
             display: flex; 
             flex-direction: column; 
-            height: 100vh;
+            height: 100vh; /* This ensures the container fills the vertical space of the iframe */
         }
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
     <header class="bg-gray-900 text-white p-4 text-center shadow-md">
         <h1 class="text-2xl font-bold">Teacher's Tools</h1>
-        <p class="text-sm text-gray-400">Video conference is already running in the left panel</p>
     </header>
     <div class="flex flex-1 overflow-hidden">
         <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
@@ -32,7 +32,7 @@
         </nav>
         
         <main id="main-content" class="flex-1 overflow-hidden">
-            <!-- REMOVED video tool - only teaching tools remain -->
+            <!-- All tool-content divs now have the correct structure -->
             <div id="flashcards-tool" class="tool-content active">
                 <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="w-full h-full border-0"></iframe>
             </div>
