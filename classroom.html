@@ -47,28 +47,56 @@
     .tool-content { display: none; height: 100%; }
     .tool-content.active { display: block; }
     .dashboard-iframe { width: 100%; height: 100%; border: none; }
-    #video-container { width: 100%; height: 100%; background: #1a1a1a; }
-    #jitsi-iframe { width: 100%; height: 100%; border: none; }
+    #video-container { 
+      width: 100%; 
+      height: 100%; 
+      background: #1a1a1a; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .meet-iframe { width: 100%; height: 100%; border: none; }
+    .meet-setup {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+    }
   </style>
 </head>
 <body>
   <div id="toolbar">
     <button onclick="goHome()">🏠 Welcome Page</button>
     <button onclick="refreshTools()">🔄 Refresh Tools</button>
-    <button onclick="toggleVideo()">🎥 Toggle Video</button>
-    <button onclick="toggleAudio()">🎤 Toggle Audio</button>
-    <button onclick="shareScreen()">🖥️ Share Screen</button>
-    <button onclick="copyInviteLink()">📧 Copy Invite Link</button>
+    <button onclick="copyMeetLink()">📧 Copy Meet Link</button>
+    <button onclick="refreshMeet()">🔄 Refresh Meet</button>
   </div>
 
   <div id="container">
-    <!-- Left: Jitsi Video Conference - DIRECT IFRAME EMBED -->
+    <!-- Left: Google Meet Video Conference -->
     <div id="left-pane" style="width: 50%;">
       <div id="video-container">
-        <iframe id="jitsi-iframe" 
-                src="https://meet.jit.si/MrIansClassroom" 
-                allow="camera; microphone; display-capture">
-        </iframe>
+        <div id="meet-setup" class="meet-setup">
+          <h2 class="text-2xl font-bold mb-4">Google Meet Classroom</h2>
+          <p class="mb-4">1. First, create your Google Meet session:</p>
+          <a href="https://meet.google.com/new" target="_blank" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-block mb-4">
+            Create Google Meet
+          </a>
+          <p class="mb-4">2. Then paste your Meet URL here:</p>
+          <input type="text" id="meet-url" placeholder="https://meet.google.com/your-meeting-code" 
+                 class="w-full p-2 rounded bg-gray-700 text-white mb-4">
+          <button onclick="loadMeet()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+            Load Google Meet
+          </button>
+          <div id="current-meet" class="mt-4 p-2 bg-blue-900 rounded hidden">
+            <p>Current Meet: <span id="current-meet-url" class="font-mono text-sm"></span></p>
+          </div>
+        </div>
+        <iframe id="meet-iframe" class="meet-iframe" style="display: none;"></iframe>
       </div>
     </div>
     
@@ -79,7 +107,6 @@
       <div class="bg-gray-800 text-white h-full flex flex-col">
         <header class="bg-gray-900 text-white p-4 text-center shadow-md">
           <h1 class="text-2xl font-bold">Teacher's Tools</h1>
-          <p class="text-sm text-gray-400">Video: meet.jit.si/MrIansClassroom</p>
         </header>
         <div class="flex flex-1 overflow-hidden">
           <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
@@ -125,8 +152,21 @@
     const divider = document.getElementById('divider');
     const left = document.getElementById('left-pane');
     const right = document.getElementById('right-pane');
-    const jitsiIframe = document.getElementById('jitsi-iframe');
+    const meetIframe = document.getElementById('meet-iframe');
+    const meetSetup = document.getElementById('meet-setup');
+    const meetUrlInput = document.getElementById('meet-url');
+    const currentMeetDiv = document.getElementById('current-meet');
+    const currentMeetUrl = document.getElementById('current-meet-url');
     let isDragging = false;
+
+    // Load saved Meet URL from localStorage
+    window.addEventListener('load', function() {
+      const savedMeetUrl = localStorage.getItem('meetUrl');
+      if (savedMeetUrl) {
+        meetUrlInput.value = savedMeetUrl;
+        loadMeet();
+      }
+    });
 
     divider.addEventListener('mousedown', () => { isDragging = true; document.body.style.cursor = 'col-resize'; });
     document.addEventListener('mouseup', () => { isDragging = false; document.body.style.cursor = 'default'; });
@@ -155,25 +195,44 @@
       document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
     }
 
-    // Video controls - these will work once Jitsi is loaded
-    function toggleVideo() {
-      // Jitsi commands don't work cross-origin, but we can show instructions
-      alert("Use the camera button in the Jitsi interface to toggle your video");
+    function loadMeet() {
+      const url = meetUrlInput.value.trim();
+      if (!url) {
+        alert('Please enter a Google Meet URL');
+        return;
+      }
+      
+      // Ensure it's a proper Google Meet URL
+      let finalUrl = url;
+      if (!url.startsWith('https://meet.google.com/')) {
+        finalUrl = 'https://meet.google.com/' + url.replace(/^.*\//, '');
+      }
+      
+      meetIframe.src = finalUrl;
+      meetIframe.style.display = 'block';
+      meetSetup.style.display = 'none';
+      
+      // Save to localStorage
+      localStorage.setItem('meetUrl', finalUrl);
+      currentMeetUrl.textContent = finalUrl;
+      currentMeetDiv.classList.remove('hidden');
     }
 
-    function toggleAudio() {
-      alert("Use the microphone button in the Jitsi interface to toggle your audio");
+    function copyMeetLink() {
+      const url = meetUrlInput.value.trim() || localStorage.getItem('meetUrl');
+      if (url) {
+        navigator.clipboard.writeText(url).then(() => {
+          alert('Meet link copied to clipboard!\n\nShare with students: ' + url);
+        });
+      } else {
+        alert('Please load a Google Meet first');
+      }
     }
 
-    function shareScreen() {
-      alert("Use the share screen button in the Jitsi interface to share your screen");
-    }
-
-    function copyInviteLink() {
-      const link = "https://meet.jit.si/MrIansClassroom";
-      navigator.clipboard.writeText(link).then(() => {
-        alert("Invite link copied to clipboard!\n\nShare this with students:\n" + link);
-      });
+    function refreshMeet() {
+      if (meetIframe.src) {
+        meetIframe.src = meetIframe.src;
+      }
     }
 
     // Initialize
