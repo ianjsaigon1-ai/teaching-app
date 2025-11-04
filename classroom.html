@@ -3,231 +3,234 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mr. Ian's Classroom</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>Mr. Ian's Classroom Dashboard</title>
   <style>
-    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; }
-    #container { display: flex; height: 100vh; width: 100%; }
-    #divider {
-      width: 8px;
-      background-color: #374151;
-      cursor: col-resize;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    #divider:hover { background-color: #4B5563; }
-    #toolbar {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(17, 24, 39, 0.9);
+    
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
       color: white;
-      padding: 10px 20px;
-      border-radius: 12px;
-      z-index: 1000;
-      display: flex;
-      gap: 10px;
+      min-height: 100vh;
     }
-    #toolbar button {
-      background: #3B82F6;
-      border: none;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    #toolbar button:hover { background: #2563EB; }
-    .tool-icon.active { background-color: #4A5568; color: white; }
-    .tool-content { display: none; height: 100%; }
-    .tool-content.active { display: block; }
-    .dashboard-iframe { width: 100%; height: 100%; border: none; }
-    #video-guide { 
-      width: 100%; 
-      height: 100%; 
-      background: #1a1a1a; 
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
       padding: 20px;
     }
-    .video-step {
-      background: rgba(255,255,255,0.1);
-      padding: 25px;
-      border-radius: 12px;
-      margin: 15px 0;
-      max-width: 500px;
-      width: 100%;
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
     }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .panel {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .panel h2 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
     .big-button {
+      display: block;
+      width: 100%;
+      padding: 20px;
       background: #10B981;
       color: white;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 10px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 10px;
       text-decoration: none;
-      display: inline-block;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 10px 0;
+      transition: transform 0.2s, background 0.2s;
     }
+    
     .big-button:hover {
+      transform: translateY(-2px);
       background: #059669;
     }
-    .meet-code {
-      background: #374151;
-      padding: 10px;
-      border-radius: 6px;
-      font-family: monospace;
-      margin: 10px 0;
+    
+    .video-button {
+      background: #EF4444;
+    }
+    
+    .video-button:hover {
+      background: #DC2626;
+    }
+    
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .tool-card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.2s, background 0.2s;
+    }
+    
+    .tool-card:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.25);
+    }
+    
+    .tool-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    
+    .instructions {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    
+    .step {
+      margin: 15px 0;
+      padding-left: 25px;
+      position: relative;
+    }
+    
+    .step:before {
+      content: "•";
+      position: absolute;
+      left: 10px;
+      color: #10B981;
+      font-size: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="toolbar">
-    <button onclick="goHome()">🏠 Home</button>
-    <button onclick="refreshTools()">🔄 Refresh Tools</button>
-    <button onclick="openVideoInNewTab()">🎥 Open Video</button>
-  </div>
+  <div class="container">
+    <header>
+      <h1>🎓 Mr. Ian's Classroom</h1>
+      <p class="subtitle">Your Teaching Dashboard - Everything in One Place</p>
+    </header>
 
-  <div id="container">
-    <!-- Left: Simple Video Instructions -->
-    <div id="left-pane" style="width: 50%;">
-      <div id="video-guide">
-        <h1 class="text-3xl font-bold mb-6">Video Classroom</h1>
+    <div class="dashboard">
+      <!-- Video Conference Panel -->
+      <div class="panel">
+        <h2>🎥 Video Classroom</h2>
+        <p>Start your video conference (1 hour free):</p>
         
-        <div class="video-step">
-          <h2 class="text-xl font-bold mb-3">Step 1: Start Your Video Call</h2>
-          <p class="mb-4">Click the button below to create a Google Meet (1 hour free)</p>
-          <a href="https://meet.google.com/new" target="_blank" class="big-button">
-            🎥 Create Google Meet
+        <a href="https://meet.google.com/new" target="_blank" class="big-button video-button">
+          🚀 Create Google Meet
+        </a>
+        
+        <div class="instructions">
+          <h3>Quick Guide:</h3>
+          <div class="step">Click "Create Google Meet" above</div>
+          <div class="step">Copy the meeting link</div>
+          <div class="step">Share with students</div>
+          <div class="step">Return here to use teaching tools</div>
+        </div>
+      </div>
+
+      <!-- Teaching Tools Panel -->
+      <div class="panel">
+        <h2>🛠️ Teaching Tools</h2>
+        <p>Click any tool to open it:</p>
+        
+        <div class="tools-grid">
+          <a href="https://ianjsaigon1-ai.github.io/flashcardsapp/" target="_blank" class="tool-card">
+            <div class="tool-icon">📋</div>
+            <div>Flash Cards</div>
           </a>
-        </div>
-
-        <div class="video-step">
-          <h2 class="text-xl font-bold mb-3">Step 2: Share with Students</h2>
-          <p>Copy the meeting link from Google Meet and share it with your students</p>
-          <div class="meet-code" id="meet-code-display">
-            Your meeting link will appear here after creation
-          </div>
-        </div>
-
-        <div class="video-step">
-          <h2 class="text-xl font-bold mb-3">Step 3: Teach!</h2>
-          <p>Use the teaching tools on the right while your video call runs in a separate tab</p>
-          <button onclick="openVideoInNewTab()" class="big-button" style="background: #3B82F6;">
-            📺 Open Video Tab
-          </button>
+          
+          <a href="https://webwhiteboard.com/" target="_blank" class="tool-card">
+            <div class="tool-icon">🎨</div>
+            <div>Whiteboard</div>
+          </a>
+          
+          <a href="https://ianjsaigon1-ai.github.io/my-translator-app/" target="_blank" class="tool-card">
+            <div class="tool-icon">🔤</div>
+            <div>Translator</div>
+          </a>
+          
+          <a href="https://storynory.com/" target="_blank" class="tool-card">
+            <div class="tool-icon">📚</div>
+            <div>Reading</div>
+          </a>
+          
+          <a href="https://ianjsaigon1-ai.github.io/my-rewards-app/" target="_blank" class="tool-card">
+            <div class="tool-icon">⭐</div>
+            <div>Awards</div>
+          </a>
+          
+          <a href="https://ianjsaigon1-ai.github.io/my-reports-app/" target="_blank" class="tool-card">
+            <div class="tool-icon">📊</div>
+            <div>Reports</div>
+          </a>
         </div>
       </div>
     </div>
-    
-    <div id="divider"></div>
-    
-    <!-- Right: Teaching Tools Dashboard -->
-    <div id="right-pane" style="width: 50%; background: #1F2937;">
-      <div class="bg-gray-800 text-white h-full flex flex-col">
-        <header class="bg-gray-900 text-white p-4 text-center shadow-md">
-          <h1 class="text-2xl font-bold">Teaching Tools</h1>
-          <p class="text-sm text-gray-400">Use these while video call runs in separate tab</p>
-        </header>
-        <div class="flex flex-1 overflow-hidden">
-          <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
-            <button onclick="showTool('flashcards')" class="tool-icon active p-3 rounded-lg hover:bg-gray-700" title="Flash Cards">
-              <i class="fas fa-clone fa-2x"></i>
-            </button>
-            <button onclick="showTool('whiteboard')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Whiteboard">
-              <i class="fas fa-chalkboard-teacher fa-2x"></i>
-            </button>
-            <button onclick="showTool('translator')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Translator">
-              <i class="fas fa-language fa-2x"></i>
-            </button>
-            <button onclick="showTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reading">
-              <i class="fas fa-book-open fa-2x"></i>
-            </button>
-            <button onclick="showTool('awards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Awards">
-              <i class="fas fa-star fa-2x"></i>
-            </button>
-            <button onclick="showTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reports">
-              <i class="fas fa-chart-bar fa-2x"></i>
-            </button>
-          </nav>
-          
-          <main id="main-content" class="flex-1 overflow-hidden">
-            <div id="flashcards-tool" class="tool-content active">
-              <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="dashboard-iframe"></iframe>
-            </div>
-            <div id="whiteboard-tool" class="tool-content">
-              <iframe src="https://webwhiteboard.com/" class="dashboard-iframe bg-white"></iframe>
-            </div>
-            <div id="translator-tool" class="tool-content">
-              <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/" class="dashboard-iframe"></iframe>
-            </div>
-            <div id="reading-tool" class="tool-content flex items-center justify-center p-8">
-              <a href="https://storynory.com/" target="_blank" class="block w-full max-w-2xl h-80 bg-gray-900 rounded-2xl shadow-lg relative overflow-hidden">
-                <img src="https://images.pexels.com/photos/3747505/pexels-photo-3747505.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="absolute inset-0 w-full h-full object-cover opacity-30">
-                <div class="relative h-full flex flex-col items-center justify-center text-center p-4">
-                  <h2 class="text-5xl font-bold mb-2">Storynory</h2>
-                </div>
-              </a>
-            </div>
-            <div id="awards-tool" class="tool-content">
-              <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/" class="dashboard-iframe"></iframe>
-            </div>
-            <div id="reports-tool" class="tool-content">
-              <iframe src="https://ianjsaigon1-ai.github.io/my-reports-app/" class="dashboard-iframe"></iframe>
-            </div>
-          </main>
-        </div>
+
+    <!-- Quick Actions -->
+    <div class="panel">
+      <h2>⚡ Quick Actions</h2>
+      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <a href="index.html" class="big-button" style="background: #6B7280; flex: 1; min-width: 200px;">
+          🏠 Back to Home
+        </a>
+        <button onclick="refreshPage()" class="big-button" style="background: #F59E0B; border: none; cursor: pointer; flex: 1; min-width: 200px;">
+          🔄 Refresh Page
+        </button>
       </div>
     </div>
   </div>
 
   <script>
-    const divider = document.getElementById('divider');
-    const left = document.getElementById('left-pane');
-    const right = document.getElementById('right-pane');
-    let isDragging = false;
-
-    divider.addEventListener('mousedown', () => { isDragging = true; document.body.style.cursor = 'col-resize'; });
-    document.addEventListener('mouseup', () => { isDragging = false; document.body.style.cursor = 'default'; });
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      if (e.clientX < 100 || e.clientX > window.innerWidth - 100) return;
-      
-      const totalWidth = window.innerWidth;
-      const leftWidth = e.clientX;
-      const rightWidth = totalWidth - leftWidth - divider.offsetWidth;
-      left.style.width = `${leftWidth}px`;
-      right.style.width = `${rightWidth}px`;
-    });
-
-    function goHome() { 
-      window.location.href = "index.html"; 
+    function refreshPage() {
+      window.location.reload();
     }
     
-    function refreshTools() { 
-      const activeTool = document.querySelector('.tool-content.active iframe');
-      if (activeTool) activeTool.src = activeTool.src;
-    }
-
-    function showTool(toolId) {
-      document.querySelectorAll('.tool-content').forEach(tool => { tool.classList.remove('active'); });
-      document.getElementById(toolId + '-tool').classList.add('active');
-      document.querySelectorAll('.tool-icon').forEach(icon => icon.classList.remove('active'));
-      document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
-    }
-
-    function openVideoInNewTab() {
-      window.open('https://meet.google.com/new', '_blank');
-    }
-
-    // Initialize
-    showTool('flashcards');
+    // No external dependencies - everything is self-contained
   </script>
 </body>
 </html>
