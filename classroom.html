@@ -9,11 +9,11 @@
     <style>
         .tool-icon.active { background-color: #4A5568; color: white; }
         .tool-content { display: none; }
-        /* THIS IS THE FIX: The active tool content should be a flex container that fills the height */
+        /* This is the working CSS that makes all buttons function correctly */
         .tool-content.active { 
             display: flex; 
             flex-direction: column; 
-            height: 100%; /* Changed from 100vh to 100% to fill its container */
+            height: 100%; 
         }
     </style>
 </head>
@@ -32,7 +32,6 @@
         </nav>
         
         <main id="main-content" class="flex-1 overflow-hidden">
-            <!-- All tool-content divs now have the h-full class and correct links -->
             <div id="flashcards-tool" class="tool-content active h-full">
                 <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="w-full h-full border-0"></iframe>
             </div>
@@ -44,7 +43,8 @@
             </div>
             <div id="reading-tool" class="tool-content h-full flex items-center justify-center p-8">
                  <a href="https://storynory.com/" target="_blank" class="block w-full max-w-2xl h-80 bg-gray-900 rounded-2xl shadow-lg relative overflow-hidden">
-                    <img src="https://images.pexels.com/photos/3747505/pexels-photo-3747505.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="absolute inset-0 w-full h-full object-cover opacity-30">
+                    <!-- THIS IS THE FIX: Using a permanent, reliable image link -->
+                    <img src="https://i.imgur.com/7T2G27d.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-30">
                     <div class="relative h-full flex flex-col items-center justify-center text-center p-4">
                         <h2 class="text-5xl font-bold mb-2">Storynory</h2>
                     </div>
