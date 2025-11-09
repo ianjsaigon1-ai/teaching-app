@@ -35,6 +35,21 @@
             height: 100%;
             border: none;
         }
+        .external-link-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .external-link-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
@@ -69,9 +84,9 @@
                 <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/"></iframe>
             </div>
             
-            <!-- Whiteboard Tool -->
+            <!-- Whiteboard Tool - FIXED with working whiteboard -->
             <div id="whiteboard-tool" class="tool-content">
-                <iframe src="https://webwhiteboard.com/"></iframe>
+                <iframe src="https://witeboard.com/"></iframe>
             </div>
             
             <!-- Translator Tool -->
@@ -79,9 +94,49 @@
                 <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/"></iframe>
             </div>
             
-            <!-- Reading Tool - FIXED Storynory -->
+            <!-- Reading Tool - FIXED with working alternatives -->
             <div id="reading-tool" class="tool-content">
-                <iframe src="https://www.storynory.com/"></iframe>
+                <div class="h-full flex flex-col items-center justify-center p-8 space-y-6">
+                    <h2 class="text-3xl font-bold mb-4">Children's Reading Resources</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+                        <!-- Storynory Link -->
+                        <div class="bg-gray-700 p-6 rounded-lg text-center">
+                            <h3 class="text-xl font-bold mb-3">Storynory Audio Stories</h3>
+                            <p class="mb-4">Free audio stories for children</p>
+                            <button onclick="window.open('https://www.storynory.com/', '_blank')" class="external-link-btn">
+                                Open Storynory
+                            </button>
+                        </div>
+                        
+                        <!-- Storyline Online -->
+                        <div class="bg-gray-700 p-6 rounded-lg text-center">
+                            <h3 class="text-xl font-bold mb-3">Storyline Online</h3>
+                            <p class="mb-4">Videos of celebrated actors reading children's books</p>
+                            <button onclick="window.open('https://storylineonline.net/', '_blank')" class="external-link-btn">
+                                Open Storyline
+                            </button>
+                        </div>
+                        
+                        <!-- International Children's Library -->
+                        <div class="bg-gray-700 p-6 rounded-lg text-center">
+                            <h3 class="text-xl font-bold mb-3">Children's Digital Library</h3>
+                            <p class="mb-4">Books from around the world</p>
+                            <button onclick="window.open('http://en.childrenslibrary.org/', '_blank')" class="external-link-btn">
+                                Open Library
+                            </button>
+                        </div>
+                        
+                        <!-- Free Kids Books -->
+                        <div class="bg-gray-700 p-6 rounded-lg text-center">
+                            <h3 class="text-xl font-bold mb-3">Free Kids Books</h3>
+                            <p class="mb-4">Free downloadable books</p>
+                            <button onclick="window.open('https://freekidsbooks.org/', '_blank')" class="external-link-btn">
+                                Open Free Books
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <!-- Awards Tool -->
