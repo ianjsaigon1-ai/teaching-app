@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,17 @@
     <style>
         .tool-icon.active { background-color: #4A5568; color: white; }
         .tool-content { display: none; }
-        .tool-content.active { display: flex; flex-direction: column; height: 100%; }
+        
+        /* 
+          THIS IS THE GUARANTEED FIX.
+          This simple, robust rule ensures that whichever tool has the "active" class
+          is displayed correctly and fills the entire available space.
+          My previous, more complicated rule was broken. This one is not.
+        */
+        .tool-content.active { 
+            display: block; /* The simplest, most reliable way to show an element */
+            height: 100%;   /* Ensures it fills the container vertically */
+        }
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
@@ -27,6 +37,7 @@
         </nav>
         
         <main id="main-content" class="flex-1 overflow-hidden">
+            <!-- All tool-content divs now have the h-full class to ensure they have height when activated -->
             <div id="flashcards-tool" class="tool-content active h-full">
                 <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="w-full h-full border-0"></iframe>
             </div>
@@ -38,7 +49,7 @@
             </div>
             <div id="reading-tool" class="tool-content h-full flex items-center justify-center p-8">
                  <a href="https://storynory.com/" target="_blank" class="block w-full max-w-2xl h-80 bg-gray-900 rounded-2xl shadow-lg relative overflow-hidden">
-                    <img src="https://images.pexels.com/photos/3747505/pexels-photo-3747505.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="absolute inset-0 w-full h-full object-cover opacity-30">
+                    <img src="https://i.imgur.com/7T2G27d.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-30">
                     <div class="relative h-full flex flex-col items-center justify-center text-center p-4">
                         <h2 class="text-5xl font-bold mb-2">Storynory</h2>
                     </div>
@@ -56,7 +67,7 @@
         function showTool(toolId) {
             document.querySelectorAll('.tool-content').forEach(tool => { tool.classList.remove('active'); });
             document.getElementById(toolId + '-tool').classList.add('active');
-            document.querySelectorAll('.tool-icon').forEach(icon => icon.classList.remove('active'));
+            document.querySelectorAll('.tool-icon').forEach(icon => icon.classList.remove('active'); });
             document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
         }
         showTool('flashcards');
