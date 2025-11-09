@@ -116,4 +116,123 @@
         showTool('flashcards');
     </script>
 </body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. Ian's Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .tool-icon.active { 
+            background-color: #4A5568; 
+            color: white; 
+        }
+        .tool-content { 
+            display: none; 
+            height: 100%;
+        }
+        .tool-content.active { 
+            display: block; 
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #main-content {
+            flex: 1;
+            height: calc(100vh - 80px);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white h-screen flex flex-col">
+    <header class="bg-gray-900 text-white p-4 text-center shadow-md">
+        <h1 class="text-2xl font-bold">Teacher's Dashboard</h1>
+    </header>
+    <div class="flex flex-1 overflow-hidden">
+        <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
+            <button onclick="showTool('flashcards')" class="tool-icon active p-3 rounded-lg hover:bg-gray-700" title="Flash Cards">
+                <i class="fas fa-clone fa-2x"></i>
+            </button>
+            <button onclick="showTool('whiteboard')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Whiteboard">
+                <i class="fas fa-chalkboard-teacher fa-2x"></i>
+            </button>
+            <button onclick="showTool('translator')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Translator">
+                <i class="fas fa-language fa-2x"></i>
+            </button>
+            <button onclick="showTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reading">
+                <i class="fas fa-book-open fa-2x"></i>
+            </button>
+            <button onclick="showTool('awards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Awards">
+                <i class="fas fa-star fa-2x"></i>
+            </button>
+            <button onclick="showTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reports">
+                <i class="fas fa-chart-bar fa-2x"></i>
+            </button>
+        </nav>
+        
+        <main id="main-content" class="flex-1 overflow-hidden">
+            <div id="flashcards-tool" class="tool-content active">
+                <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/"></iframe>
+            </div>
+            <div id="whiteboard-tool" class="tool-content">
+                <iframe src="https://webwhiteboard.com/"></iframe>
+            </div>
+            <div id="translator-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/"></iframe>
+            </div>
+            <div id="reading-tool" class="tool-content">
+                <div class="h-full flex items-center justify-center p-8">
+                    <a href="https://www.storynory.com/" target="_blank" class="block w-full max-w-2xl h-80 bg-gray-900 rounded-2xl shadow-lg relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" class="absolute inset-0 w-full h-full object-cover opacity-30">
+                        <div class="relative h-full flex flex-col items-center justify-center text-center p-4">
+                            <h2 class="text-5xl font-bold mb-2">Storynory</h2>
+                            <p class="text-xl">Free Audio Stories for Children</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div id="awards-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/"></iframe>
+            </div>
+            <div id="reports-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-reports-app/"></iframe>
+            </div>
+        </main>
+    </div>
+    <script>
+        function showTool(toolId) {
+            // Hide all tool contents
+            document.querySelectorAll('.tool-content').forEach(tool => {
+                tool.classList.remove('active');
+            });
+            
+            // Show the selected tool content
+            document.getElementById(toolId + '-tool').classList.add('active');
+            
+            // Update active button styling
+            document.querySelectorAll('.tool-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+            
+            // Find the button that was clicked and add active class
+            const clickedButton = document.querySelector(`button[onclick="showTool('${toolId}')"]`);
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+        
+        // Initialize with flashcards tool active
+        showTool('flashcards');
+    </script>
+</body>
 </html>
+
