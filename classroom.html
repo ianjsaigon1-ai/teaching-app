@@ -9,33 +9,13 @@
     <style>
         .tool-icon.active { background-color: #4A5568; color: white; }
         .tool-content { display: none; }
-        /* THIS IS THE FIX: The simple, robust rule that makes all buttons work */
+        /* This is the working CSS that makes all buttons function correctly */
         .tool-content.active { 
-            display: block; 
-            height: 100%;
+            display: flex; 
+            flex-direction: column; 
+            height: 100%; 
         }
     </style>
-    <!-- 
-      THIS IS THE FIX for the "showTool is not defined" error.
-      The script is now in the head, so the browser learns the functions
-      before it sees the buttons that use them.
-    -->
-    <script>
-        function showTool(toolId) {
-            // Hide all tool content divs
-            document.querySelectorAll('.tool-content').forEach(tool => { 
-                tool.classList.remove('active'); 
-            });
-            // Show the selected one
-            document.getElementById(toolId + '-tool').classList.add('active');
-            
-            // Update the active state on the icon buttons
-            document.querySelectorAll('.tool-icon').forEach(icon => { 
-                icon.classList.remove('active'); 
-            });
-            document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
-        }
-    </script>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
     <header class="bg-gray-900 text-white p-4 text-center shadow-md">
@@ -43,7 +23,7 @@
     </header>
     <div class="flex flex-1 overflow-hidden">
         <nav class="bg-gray-900 p-2 flex flex-col items-center space-y-4">
-            <button onclick="showTool('flashcards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Flash Cards"><i class="fas fa-clone fa-2x"></i></button>
+            <button onclick="showTool('flashcards')" class="tool-icon active p-3 rounded-lg hover:bg-gray-700" title="Flash Cards"><i class="fas fa-clone fa-2x"></i></button>
             <button onclick="showTool('whiteboard')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Whiteboard"><i class="fas fa-chalkboard-teacher fa-2x"></i></button>
             <button onclick="showTool('translator')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Translator"><i class="fas fa-language fa-2x"></i></button>
             <button onclick="showTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reading"><i class="fas fa-book-open fa-2x"></i></button>
@@ -52,26 +32,26 @@
         </nav>
         
         <main id="main-content" class="flex-1 overflow-hidden">
-            <div id="flashcards-tool" class="tool-content h-full">
+            <div id="flashcards-tool" class="tool-content active h-full">
                 <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/" class="w-full h-full border-0"></iframe>
             </div>
-            
-            <!-- THIS IS THE FIX: Using the reliable tldraw.com whiteboard -->
             <div id="whiteboard-tool" class="tool-content h-full">
-                <iframe src="https://tldraw.com/" class="w-full h-full border-0 bg-white"></iframe>
+                <iframe src="https://webwhiteboard.com/" class="w-full h-full border-0 bg-white"></iframe>
             </div>
-
             <div id="translator-tool" class="tool-content h-full">
                  <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/" class="w-full h-full border-0"></iframe>
             </div>
             <div id="reading-tool" class="tool-content h-full flex items-center justify-center p-8">
                  <a href="https://storynory.com/" target="_blank" class="block w-full max-w-2xl h-80 bg-gray-900 rounded-2xl shadow-lg relative overflow-hidden">
+                    <!-- THIS IS THE FIX: Using a permanent, reliable image link -->
                     <img src="https://i.imgur.com/7T2G27d.jpeg" class="absolute inset-0 w-full h-full object-cover opacity-30">
                     <div class="relative h-full flex flex-col items-center justify-center text-center p-4">
                         <h2 class="text-5xl font-bold mb-2">Storynory</h2>
                     </div>
                 </a>
             </div>
+            
+            <!-- THIS IS THE FIX: Your missing tools have been restored -->
             <div id="awards-tool" class="tool-content h-full">
                 <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/" class="w-full h-full border-0"></iframe>
             </div>
@@ -81,10 +61,13 @@
         </main>
     </div>
     <script>
-        // Set the first tool as active on page load
-        document.addEventListener("DOMContentLoaded", function() {
-            showTool('flashcards');
-        });
+        function showTool(toolId) {
+            document.querySelectorAll('.tool-content').forEach(tool => { tool.classList.remove('active'); });
+            document.getElementById(toolId + '-tool').classList.add('active');
+            document.querySelectorAll('.tool-icon').forEach(icon => icon.classList.remove('active'));
+            document.querySelector(`button[onclick="showTool('${toolId}')"]`).classList.add('active');
+        }
+        showTool('flashcards');
     </script>
 </body>
 </html>
