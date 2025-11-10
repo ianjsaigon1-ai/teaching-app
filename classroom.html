@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -50,6 +50,23 @@
             background: #2563eb;
             transform: scale(1.05);
         }
+        
+        /* Background styles */
+        .reading-bg {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('pexels-_-cecile-2065577-21077452.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .awards-bg {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.pexels.com/photos/6532364/pexels-photo-6532364.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+        .reports-bg {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('pexels-rdne-7947663.jpg');
+            background-size: cover;
+            background-position: center;
+        }
     </style>
 </head>
 <body class="bg-gray-800 text-white h-screen flex flex-col">
@@ -84,9 +101,9 @@
                 <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/"></iframe>
             </div>
             
-            <!-- Whiteboard Tool - FIXED with working whiteboard -->
+            <!-- Whiteboard Tool - Try alternative whiteboard -->
             <div id="whiteboard-tool" class="tool-content">
-                <iframe src="https://witeboard.com/"></iframe>
+                <iframe src="https://whiteboard.fi/"></iframe>
             </div>
             
             <!-- Translator Tool -->
@@ -94,43 +111,43 @@
                 <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/"></iframe>
             </div>
             
-            <!-- Reading Tool - FIXED with working alternatives -->
-            <div id="reading-tool" class="tool-content">
+            <!-- Reading Tool with Background -->
+            <div id="reading-tool" class="tool-content reading-bg">
                 <div class="h-full flex flex-col items-center justify-center p-8 space-y-6">
-                    <h2 class="text-3xl font-bold mb-4">Children's Reading Resources</h2>
+                    <h2 class="text-4xl font-bold mb-4 text-white text-shadow">Children's Reading Resources</h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
                         <!-- Storynory Link -->
-                        <div class="bg-gray-700 p-6 rounded-lg text-center">
-                            <h3 class="text-xl font-bold mb-3">Storynory Audio Stories</h3>
-                            <p class="mb-4">Free audio stories for children</p>
+                        <div class="bg-gray-800 bg-opacity-80 p-6 rounded-lg text-center backdrop-blur-sm">
+                            <h3 class="text-xl font-bold mb-3 text-white">Storynory Audio Stories</h3>
+                            <p class="mb-4 text-gray-200">Free audio stories for children</p>
                             <button onclick="window.open('https://www.storynory.com/', '_blank')" class="external-link-btn">
                                 Open Storynory
                             </button>
                         </div>
                         
                         <!-- Storyline Online -->
-                        <div class="bg-gray-700 p-6 rounded-lg text-center">
-                            <h3 class="text-xl font-bold mb-3">Storyline Online</h3>
-                            <p class="mb-4">Videos of celebrated actors reading children's books</p>
+                        <div class="bg-gray-800 bg-opacity-80 p-6 rounded-lg text-center backdrop-blur-sm">
+                            <h3 class="text-xl font-bold mb-3 text-white">Storyline Online</h3>
+                            <p class="mb-4 text-gray-200">Videos of celebrated actors reading children's books</p>
                             <button onclick="window.open('https://storylineonline.net/', '_blank')" class="external-link-btn">
                                 Open Storyline
                             </button>
                         </div>
                         
                         <!-- International Children's Library -->
-                        <div class="bg-gray-700 p-6 rounded-lg text-center">
-                            <h3 class="text-xl font-bold mb-3">Children's Digital Library</h3>
-                            <p class="mb-4">Books from around the world</p>
+                        <div class="bg-gray-800 bg-opacity-80 p-6 rounded-lg text-center backdrop-blur-sm">
+                            <h3 class="text-xl font-bold mb-3 text-white">Children's Digital Library</h3>
+                            <p class="mb-4 text-gray-200">Books from around the world</p>
                             <button onclick="window.open('http://en.childrenslibrary.org/', '_blank')" class="external-link-btn">
                                 Open Library
                             </button>
                         </div>
                         
                         <!-- Free Kids Books -->
-                        <div class="bg-gray-700 p-6 rounded-lg text-center">
-                            <h3 class="text-xl font-bold mb-3">Free Kids Books</h3>
-                            <p class="mb-4">Free downloadable books</p>
+                        <div class="bg-gray-800 bg-opacity-80 p-6 rounded-lg text-center backdrop-blur-sm">
+                            <h3 class="text-xl font-bold mb-3 text-white">Free Kids Books</h3>
+                            <p class="mb-4 text-gray-200">Free downloadable books</p>
                             <button onclick="window.open('https://freekidsbooks.org/', '_blank')" class="external-link-btn">
                                 Open Free Books
                             </button>
@@ -139,13 +156,13 @@
                 </div>
             </div>
             
-            <!-- Awards Tool -->
-            <div id="awards-tool" class="tool-content">
+            <!-- Awards Tool with Background -->
+            <div id="awards-tool" class="tool-content awards-bg">
                 <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/"></iframe>
             </div>
             
-            <!-- Reports Tool -->
-            <div id="reports-tool" class="tool-content">
+            <!-- Reports Tool with Background -->
+            <div id="reports-tool" class="tool-content reports-bg">
                 <iframe src="https://ianjsaigon1-ai.github.io/my-reports-app/"></iframe>
             </div>
         </main>
