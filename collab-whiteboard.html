@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Whiteboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #1f2937; 
+            font-family: Arial, sans-serif; 
+            height: 100vh; 
+            display: flex;
+            flex-direction: column;
+        }
+        .controls { 
+            background: #374151; 
+            padding: 10px; 
+            display: flex; 
+            gap: 10px; 
+            align-items: center; 
+            flex-wrap: wrap;
+        }
+        .color-btn { 
+            width: 25px; 
+            height: 25px; 
+            border-radius: 50%; 
+            border: 2px solid #9ca3af; 
+            cursor: pointer; 
+        }
+        .color-btn.active { 
+            border-color: white; 
+        }
+        .btn { 
+            background: #6b7280; 
+            color: white; 
+            border: none; 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 12px;
+        }
+        .btn.active {
+            background: #059669;
+        }
+        .clear-btn { 
+            background: #dc2626; 
+        }
+        #whiteboard { 
+            flex: 1; 
+            background: white; 
+            cursor: crosshair;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <span style="color: white; font-size: 12px;">Colors:</span>
+        <button class="color-btn active" style="background: #000000;" onclick="setColor('#000000')"></button>
+        <button class="color-btn" style="background: #dc2626;" onclick="setColor('#dc2626')"></button>
+        <button class="color-btn" style="background: #2563eb;" onclick="setColor('#2563eb')"></button>
+        <button class="color-btn" style="background: #16a34a;" onclick="setColor('#16a34a')"></button>
+        
+        <span style="color: white; font-size: 12px; margin-left: 10px;">Size:</span>
+        <button class="btn active" onclick="setSize(2)">Small</button>
+        <button class="btn" onclick="setSize(5)">Medium</button>
+        <button class="btn" onclick="setSize(10)">Large</button>
+        
+        <button class="btn clear-btn" onclick="clearWhiteboard()" style="margin-left: auto;">
+            Clear Board
+        </button>
+    </div>
+    
+    <canvas id="whiteboard"></canvas>
+
+    <script>
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let currentColor = '#000000';
+        let currentSize = 5;
+        let canvas, ctx;
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            canvas = document.getElementById('whiteboard');
+            ctx = canvas.getContext('2d');
+            
+            resizeCanvas();
+            setupEventListeners();
+            
+            // Set white background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - 50; // Account for controls height
+        }
+
+        function setupEventListeners() {
+            // Mouse events
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            // Touch events for mobile
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+
+            window.addEventListener('resize', resizeCanvas);
+        }
+
+        function getCanvasPosition(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+            
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function startDrawing(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const pos = getCanvasPosition(e);
+            [lastX, lastY] = [pos.x, pos.y];
+            
+            // Draw initial dot
+            ctx.beginPath();
+            ctx.arc(lastX, lastY, currentSize/2, 0, Math.PI * 2);
+            ctx.fillStyle = currentColor;
+            ctx.fill();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            e.preventDefault();
+            const pos = getCanvasPosition(e);
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = currentSize;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+            
+            [lastX, lastY] = [pos.x, pos.y];
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            if (e.type === 'touchstart') {
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent('mousedown', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(mouseEvent);
+            } else if (e.type === 'touchmove' && isDrawing) {
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent('mousemove', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(mouseEvent);
+            }
+        }
+
+        function setColor(color) {
+            currentColor = color;
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function setSize(size) {
+            currentSize = size;
+            document.querySelectorAll('.btn').forEach(btn => {
+                if(['Small','Medium','Large'].some(t => btn.textContent.includes(t))) {
+                    btn.classList.remove('active');
+                }
+            });
+            event.target.classList.add('active');
+        }
+
+        function clearWhiteboard() {
+            if (confirm('Clear the whiteboard?')) {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+    </script>
+</body>
+</html>
