@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mr. Ian's Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .tool-icon.active { background-color: #4A5568; color: white; }
+        .tool-content { display: none; height: 100%; }
+        .tool-content.active { display: flex; flex-direction: column; height: 100%; }
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        #main-content { flex: 1; height: calc(100vh - 92px); }
+        iframe { width: 100%; height: 100%; border: none; }
+        .external-link-btn {
+            background: #3b82f6; color: white; padding: 8px 14px;
+            border-radius: 8px; font-size: 0.95em; font-weight: bold;
+            border: none; cursor: pointer; transition: all 0.18s;
+        }
+        .external-link-btn:hover { background: #2563eb; transform: scale(1.03); }
+        .nav-container { height: calc(100vh - 92px); overflow-y: auto; }
+        .reading-bg, .worksheets-bg, .awards-bg, .reports-bg {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+            url('./Images/classroom-library-bg.jpg');
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            background-color: #2d3748;
+        }
+        .worksheet-card {
+            background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .nav-container::-webkit-scrollbar { width: 6px; }
+        .nav-container::-webkit-scrollbar-track { background: #374151; }
+        .nav-container::-webkit-scrollbar-thumb { background: #6B7280; border-radius: 3px; }
+
+        /* Header Controls */
+        .control-btn {
+            background:#111827; border:1px solid rgba(255,255,255,0.06);
+            color:#E5E7EB; padding:8px 10px; border-radius:8px; cursor:pointer;
+        }
+        .control-btn:hover { background:#0f1724; transform:translateY(-1px); }
+
+        @media (max-width: 720px) {
+            .header-controls { flex-direction: column; gap:6px; }
+            .nav-container, #main-content { height: calc(100vh - 140px); }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-800 text-white h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-gray-900 text-white p-4 shadow-md flex items-center justify-between">
+
+        <div class="flex items-center gap-4">
+            <h1 class="text-2xl font-bold">Teacher's Dashboard</h1>
+            <div class="text-sm text-gray-300">— Classroom Tools</div>
+        </div>
+
+        <!-- HEADER BUTTONS (NO JOIN CLASS BUTTON HERE) -->
+        <div class="flex items-center gap-3">
+
+            <!-- Start Whiteboard (Excalidraw room) -->
+            <button id="start-whiteboard-btn" class="control-btn">
+                <i class="fas fa-chalkboard mr-2"></i>Start Whiteboard
+            </button>
+
+            <!-- Open Current Tool -->
+            <button id="open-tool-window-btn" class="control-btn">
+                <i class="fas fa-external-link-alt mr-2"></i>Open Tool
+            </button>
+
+            <!-- Toggle -->
+            <label class="flex items-center gap-2 text-sm">
+                <input id="prefer-external" type="checkbox" />
+                Prefer external
+            </label>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+
+        <!-- LEFT TOOLBAR -->
+        <nav class="bg-gray-900 p-2 nav-container">
+            <div class="flex flex-col items-center space-y-4">
+                <button onclick="selectTool('flashcards')" class="tool-icon active p-3 rounded-lg hover:bg-gray-700" title="Flashcards">
+                    <i class="fas fa-clone fa-2x"></i>
+                </button>
+                <button onclick="selectTool('phonics')" class="tool-icon p-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-language fa-2x"></i>
+                </button>
+                <button onclick="selectTool('worksheets')" class="tool-icon p-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-file-alt fa-2x"></i>
+                </button>
+                <button onclick="selectTool('whiteboard')" class="tool-icon p-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                </button>
+                <button onclick="selectTool('translator')" class="tool-icon p-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-exchange-alt fa-2x"></i>
+                </button>
+                <button onclick="selectTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-book-open fa-2x"></i>
+                </button>
+                <button onclick="selectTool('awards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-star fa-2x"></i>
+                </button>
+                <button onclick="selectTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-chart-bar fa-2x"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main id="main-content" class="flex-1 overflow-hidden">
+
+            <!-- Flashcards -->
+            <div id="flashcards-tool" class="tool-content active">
+                <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/"></iframe>
+            </div>
+
+            <!-- Phonics -->
+            <div id="phonics-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/phonics-vocabulary/"></iframe>
+            </div>
+
+            <!-- Worksheets -->
+            <div id="worksheets-tool" class="tool-content worksheets-bg">
+                <div class="h-full flex flex-col items-center p-4 space-y-4 overflow-auto">
+                    <h2 class="text-3xl font-bold">Free English Worksheets</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
+
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold text-white">Education.com</h3>
+                            <button onclick="window.open('https://www.education.com/worksheets/','_blank')" class="external-link-btn">Browse</button>
+                        </div>
+
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold text-white">K5 Learning</h3>
+                            <button onclick="window.open('https://www.k5learning.com/','_blank')" class="external-link-btn">Get Worksheets</button>
+                        </div>
+
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold text-white">Super Teacher Worksheets</h3>
+                            <button onclick="window.open('https://www.superteacherworksheets.com/','_blank')" class="external-link-btn">Open</button>
+                        </div>
+
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold text-white">WorksheetWorks.com</h3>
+                            <button onclick="window.open('https://www.worksheetworks.com/','_blank')" class="external-link-btn">Custom</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Whiteboard -->
+            <div id="whiteboard-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-whiteboard-app/"></iframe>
+            </div>
+
+            <!-- Translator -->
+            <div id="translator-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/"></iframe>
+            </div>
+
+            <!-- Reading -->
+            <div id="reading-tool" class="tool-content reading-bg">
+                <div class="h-full flex flex-col items-center p-4 space-y-4 overflow-auto">
+                    <h2 class="text-3xl font-bold">Children's Reading Resources</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg text-white">Storynory</h3>
+                            <button onclick="window.open('https://storynory.com','_blank')" class="external-link-btn">Open</button>
+                        </div>
+
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg text-white">Storyline Online</h3>
+                            <button onclick="window.open('https://storylineonline.net','_blank')" class="external-link-btn">Open</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Awards -->
+            <div id="awards-tool" class="tool-content awards-bg">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/"></iframe>
+            </div>
+
+            <!-- Reports -->
+            <div id="reports-tool" class="tool-content reports-bg">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-reports-app/"></iframe>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // URLs for tools
+        const TOOL_URLS = {
+            flashcards: "https://ianjsaigon1-ai.github.io/flashcardsapp/",
+            phonics: "https://ianjsaigon1-ai.github.io/phonics-vocabulary/",
+            worksheets: null,
+            whiteboard: "https://ianjsaigon1-ai.github.io/my-whiteboard-app/",
+            translator: "https://ianjsaigon1-ai.github.io/my-translator-app/",
+            reading: null,
+            awards: "https://ianjsaigon1-ai.github.io/my-rewards-app/",
+            reports: "https://ianjsaigon1-ai.github.io/my-reports-app/"
+        };
+
+        let currentTool = "flashcards";
+
+        // Buttons
+        const preferExternalCheckbox = document.getElementById("prefer-external");
+        const startWhiteboardBtn = document.getElementById("start-whiteboard-btn");
+        const openToolBtn = document.getElementById("open-tool-window-btn");
+
+        // Start Excalidraw Whiteboard
+        startWhiteboardBtn.addEventListener("click", () => {
+            const roomId = "room-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,8);
+            const url = `https://excalidraw.com/#room=${roomId}`;
+            window.open(url, "_blank");
+        });
+
+        openToolBtn.addEventListener("click", () => {
+            const url = TOOL_URLS[currentTool];
+            if (!url) {
+                alert("This tool contains multiple sub-links. Open them manually.");
+                return;
+            }
+            window.open(url, "_blank");
+        });
+
+        // Select tool
+        function selectTool(toolId) {
+            currentTool = toolId;
+
+            document.querySelectorAll(".tool-content").forEach(t => t.classList.remove("active"));
+            document.getElementById(toolId + "-tool").classList.add("active");
+
+            document.querySelectorAll(".tool-icon").forEach(i => i.classList.remove("active"));
+            const btn = document.querySelector(`button[onclick="selectTool('${toolId}')"]`);
+            if (btn) btn.classList.add("active");
+
+            if (preferExternalCheckbox.checked) {
+                const url = TOOL_URLS[toolId];
+                if (url) window.open(url, "_blank");
+            }
+        }
+
+        // Default tool
+        selectTool("flashcards");
+    </script>
+
+</body>
+</html>
