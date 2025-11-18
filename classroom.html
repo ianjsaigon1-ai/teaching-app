@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. Ian's Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Real-time Clock */
+        #live-clock {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tool-icon.active { 
+            background-color: #4A5568; 
+            color: white; 
+        }
+        .tool-content { 
+            display: none; 
+            height: 100%;
+        }
+        .tool-content.active { 
+            display: flex; 
+            flex-direction: column; 
+            height: 100%; 
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #main-content {
+            flex: 1;
+            height: calc(100vh - 80px);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .external-link-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .external-link-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+        
+        /* Navigation with scroll */
+        .nav-container {
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+        
+        /* Background styles */
+        .home-bg {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('./Images/classroom-library-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .registration-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('./Images/classroom-library-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .reading-bg {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('./Images/classroom-library-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .worksheets-bg {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('./Images/classroom-library-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .awards-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('./Images/trophies-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .reports-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('./Images/reports-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .youtube-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('./Images/classroom-library-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .expectations-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('./Images/reports-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        /* Fallback background colors */
+        .home-bg, .registration-bg, .reading-bg, .worksheets-bg, .awards-bg, .reports-bg, .youtube-bg, .expectations-bg {
+            background-color: #2d3748;
+        }
+
+        .worksheet-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .nav-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .nav-container::-webkit-scrollbar-track {
+            background: #374151;
+        }
+        .nav-container::-webkit-scrollbar-thumb {
+            background: #6B7280;
+            border-radius: 3px;
+        }
+        
+        /* Home Page Styles */
+        .home-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .welcome-message {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 40px;
+            max-width: 800px;
+        }
+
+        .welcome-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.8rem;
+            color: #ffd166;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .classroom-image {
+            max-width: 600px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ffd166;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .feature-description {
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+
+        /* Registration Form Styles */
+        .registration-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .registration-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #10B981, #34D399);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, #6B7280, #9CA3AF);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clear-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+        }
+
+        .students-list {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-info h4 {
+            margin: 0 0 5px 0;
+            color: white;
+        }
+
+        .student-info p {
+            margin: 0;
+            color: #D1D5DB;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn {
+            background: #EF4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #DC2626;
+        }
+
+        /* YouTube search styles */
+        .youtube-search-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .search-button {
+            padding: 12px 20px;
+            background: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .search-button:hover {
+            background: #CC0000;
+        }
+        
+        .youtube-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .youtube-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .youtube-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .youtube-icon {
+            color: #FF0000;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* English Expectations Styles */
+        :root {
+            --eal-color: #4a86e8;
+            --efl-color: #e75480;
+            --accent-color: #ffd166;
+            --dark-bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-light: #f8f9fa;
+        }
+
+        .expectations-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .expectations-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .expectations-title {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--eal-color), var(--efl-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .expectations-subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .expectations-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .legend-eal {
+            background: var(--eal-color);
+        }
+
+        .legend-efl {
+            background: var(--efl-color);
+        }
+
+        .expectations-grid {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .expectations-column {
+            flex: 1;
+            min-width: 450px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .column-header {
+            padding: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .eal-column .column-header {
+            background: linear-gradient(135deg, var(--eal-color), #3a6bc5);
+        }
+
+        .efl-column .column-header {
+            background: linear-gradient(135deg, var(--efl-color), #c44569);
+        }
+
+        .age-box {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .age-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .age-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--accent-color);
+        }
+
+        .abilities-list {
+            margin: 15px 0;
+        }
+
+        .ability-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            padding: 8px 0;
+        }
+
+        .ability-icon {
+            color: var(--accent-color);
+            margin-right: 10px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .test-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .test-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .test-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-color), #ffb347);
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .test-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .expectations-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .expectations-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .expectations-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .expectations-action-btn.print {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+
+        .expectations-footnote {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            margin: 30px auto;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .expectations-footnote strong {
+            color: var(--accent-color);
+        }
+
+        @media screen and (max-width: 1000px) {
+            .expectations-grid {
+                flex-direction: column;
+            }
+            
+            .expectations-column {
+                min-width: 100%;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1.4rem;
+            }
+
+            .feature-highlights {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .expectations-title {
+                font-size: 2rem;
+            }
+            
+            .column-header {
+                font-size: 1.5rem;
+            }
+            
+            .age-title {
+                font-size: 1.1rem;
+            }
+            
+            .expectations-action-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+
+            #live-clock {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 10px auto;
+                text-align: center;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .welcome-message {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white h-screen flex flex-col">
+    <header class="bg-gray-900 text-white p-4 text-center shadow-md relative">
+        <h1 class="text-2xl font-bold">Teacher's Dashboard</h1>
+        <div id="live-clock" class="text-sm">
+            <div id="current-date"></div>
+            <div id="current-time"></div>
+        </div>
+    </header>
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Navigation with scroll -->
+        <nav class="bg-gray-900 p-2 nav-container">
+            <div class="flex flex-col items-center space-y-4">
+                <button onclick="showTool('home')" class="tool-icon active p-3 rounded-lg hover:bg-gray-700" title="Home">
+                    <i class="fas fa-home fa-2x"></i>
+                </button>
+                <button onclick="showTool('registration')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Student Registration">
+                    <i class="fas fa-user-plus fa-2x"></i>
+                </button>
+                <button onclick="showTool('flashcards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Flash Cards">
+                    <i class="fas fa-clone fa-2x"></i>
+                </button>
+                <button onclick="showTool('phonics')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Phonics Flashcards">
+                    <i class="fas fa-language fa-2x"></i>
+                </button>
+                <button onclick="showTool('worksheets')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Worksheets">
+                    <i class="fas fa-file-alt fa-2x"></i>
+                </button>
+                <button onclick="showTool('whiteboard')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Whiteboard">
+                    <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                </button>
+                <button onclick="showTool('translator')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Translator">
+                    <i class="fas fa-exchange-alt fa-2x"></i>
+                </button>
+                <button onclick="showTool('reading')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reading">
+                    <i class="fas fa-book-open fa-2x"></i>
+                </button>
+                <button onclick="showTool('youtube')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="YouTube">
+                    <i class="fab fa-youtube fa-2x"></i>
+                </button>
+                <button onclick="showTool('awards')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Awards">
+                    <i class="fas fa-star fa-2x"></i>
+                </button>
+                <button onclick="showTool('reports')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="Reports">
+                    <i class="fas fa-chart-bar fa-2x"></i>
+                </button>
+                <button onclick="showTool('expectations')" class="tool-icon p-3 rounded-lg hover:bg-gray-700" title="English Expectations">
+                    <i class="fas fa-graduation-cap fa-2x"></i>
+                </button>
+            </div>
+        </nav>
+        
+        <main id="main-content" class="flex-1 overflow-hidden">
+            <!-- Home Tool -->
+            <div id="home-tool" class="tool-content active home-bg">
+                <div class="home-container">
+                    <div class="welcome-message">
+                        <h1 class="welcome-title">Welcome to Tutor Ian's Classroom!</h1>
+                        <p class="welcome-subtitle">You will now experience the Tutor Ian Effect!</p>
+                    </div>
+                    
+                    <img src="my-classroom-8953770.jpg" alt="Tutor Ian's Classroom" class="classroom-image">
+                    
+                    <div class="feature-highlights">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h3 class="feature-title">Student Registration</h3>
+                            <p class="feature-description">Register new students with complete profiles including Vietnamese and English names, parent contacts, and join dates.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h3 class="feature-title">Reward System</h3>
+                            <p class="feature-description">Motivate students with our interactive star reward system and track their progress automatically.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h3 class="feature-title">Progress Reports</h3>
+                            <p class="feature-description">Generate comprehensive reports and track student development with detailed analytics.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h3 class="feature-title">Learning Resources</h3>
+                            <p class="feature-description">Access flashcards, worksheets, reading materials, and educational videos all in one place.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Registration Tool -->
+            <div id="registration-tool" class="tool-content registration-bg">
+                <div class="registration-container">
+                    <h2 class="text-3xl font-bold mb-6 text-center text-white">Student Registration</h2>
+                    
+                    <div class="registration-form">
+                        <form id="studentForm">
+                            <div class="form-group">
+                                <label class="form-label">Student Join Date</label>
+                                <input type="date" id="joinDate" class="form-input" required>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Student Vietnamese Name</label>
+                                    <input type="text" id="vietnameseName" class="form-input" placeholder="Enter Vietnamese name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Student English Name</label>
+                                    <input type="text" id="englishName" class="form-input" placeholder="Enter English name" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Parent's Name</label>
+                                <input type="text" id="parentName" class="form-input" placeholder="Enter parent's name" required>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Parent's Telephone</label>
+                                    <input type="tel" id="parentPhone" class="form-input" placeholder="Enter phone number" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Parent's Email</label>
+                                    <input type="email" id="parentEmail" class="form-input" placeholder="Enter email address" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="submit-btn">
+                                    <i class="fas fa-save"></i> Save Student
+                                </button>
+                                <button type="button" class="clear-btn" onclick="clearForm()">
+                                    <i class="fas fa-eraser"></i> Clear Form
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="students-list">
+                        <h3 class="text-xl font-bold mb-4 text-white">Registered Students</h3>
+                        <div id="studentsList">
+                            <!-- Students will be listed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Flashcards Tool -->
+            <div id="flashcards-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/flashcardsapp/"></iframe>
+            </div>
+            
+            <!-- Phonics Flashcards Tool -->
+            <div id="phonics-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/phonics-vocabulary/"></iframe>
+            </div>
+            
+            <!-- Worksheets Tool -->
+            <div id="worksheets-tool" class="tool-content worksheets-bg">
+                <div class="h-full flex flex-col items-center justify-start p-4 space-y-4 overflow-auto">
+                    <h2 class="text-3xl font-bold mb-2 text-white text-shadow">Free English Worksheets</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
+                        <!-- Education.com -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">Education.com</h3>
+                            <p class="mb-3 text-gray-200 text-sm">Pre-K to Grade 5 • Reading, Writing, Phonics</p>
+                            <button onclick="window.open('https://www.education.com/worksheets/', '_blank')" class="external-link-btn">
+                                Browse Worksheets
+                            </button>
+                        </div>
+                        
+                        <!-- K5 Learning -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">K5 Learning</h3>
+                            <p class="mb-3 text-gray-200 text-sm">K-5 • Reading, Grammar, Vocabulary</p>
+                            <button onclick="window.open('https://www.k5learning.com/', '_blank')" class="external-link-btn">
+                                Get Worksheets
+                            </button>
+                        </div>
+                        
+                        <!-- Super Teacher Worksheets -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">Super Teacher Worksheets</h3>
+                            <p class="mb-3 text-gray-200 text-sm">K-5 • Grammar, Reading, Spelling</p>
+                            <button onclick="window.open('https://www.superteacherworksheets.com/', '_blank')" class="external-link-btn">
+                                Find Worksheets
+                            </button>
+                        </div>
+                        
+                        <!-- WorksheetWorks.com -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">WorksheetWorks.com</h3>
+                            <p class="mb-3 text-gray-200 text-sm">All Grades • Customizable Worksheets</p>
+                            <button onclick="window.open('https://www.worksheetworks.com/', '_blank')" class="external-link-btn">
+                                Create Custom
+                            </button>
+                        </div>
+                        
+                        <!-- ISL Collective -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">ISL Collective</h3>
+                            <p class="mb-3 text-gray-200 text-sm">ESL Focus • 1,000+ Free Worksheets</p>
+                            <button onclick="window.open('https://en.islcollective.com/', '_blank')" class="external-link-btn">
+                                ESL Worksheets
+                            </button>
+                        </div>
+                        
+                        <!-- Kids Academy -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">Kids Academy</h3>
+                            <p class="mb-3 text-gray-200 text-sm">Pre-K to Grade 3 • Alphabet, Phonics</p>
+                            <button onclick="window.open('https://www.kidsacademy.mobi/printable-worksheets/', '_blank')" class="external-link-btn">
+                                Early Learning
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Whiteboard Tool -->
+            <div id="whiteboard-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-whiteboard-app/"></iframe>
+            </div>
+            
+            <!-- Translator Tool with microphone permission -->
+            <div id="translator-tool" class="tool-content">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-translator-app/" allow="microphone"></iframe>
+            </div>
+            
+            <!-- Reading Tool with Background -->
+            <div id="reading-tool" class="tool-content reading-bg">
+                <div class="h-full flex flex-col items-center justify-start p-4 space-y-4 overflow-auto">
+                    <h2 class="text-3xl font-bold mb-2 text-white text-shadow">Children's Reading Resources</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+                        <!-- Storynory Link -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">Storynory Audio Stories</h3>
+                            <p class="mb-3 text-gray-200 text-sm">Free audio stories for children</p>
+                            <button onclick="window.open('https://www.storynory.com/', '_blank')" class="external-link-btn">
+                                Open Storynory
+                            </button>
+                        </div>
+                        
+                        <!-- Storyline Online -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">Storyline Online</h3>
+                            <p class="mb-3 text-gray-200 text-sm">Videos of actors reading books</p>
+                            <button onclick="window.open('https://storylineonline.net/', '_blank')" class="external-link-btn">
+                                Open Storyline
+                            </button>
+                        </div>
+                        
+                        <!-- International Children's Library -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">Children's Digital Library</h3>
+                            <p class="mb-3 text-gray-200 text-sm">Books from around the world</p>
+                            <button onclick="window.open('http://en.childrenslibrary.org/', '_blank')" class="external-link-btn">
+                                Open Library
+                            </button>
+                        </div>
+                        
+                        <!-- Free Kids Books -->
+                        <div class="worksheet-card p-4 rounded-lg text-center">
+                            <h3 class="text-lg font-bold mb-2 text-white">Free Kids Books</h3>
+                            <p class="mb-3 text-gray-200 text-sm">Free downloadable books</p>
+                            <button onclick="window.open('https://freekidsbooks.org/', '_blank')" class="external-link-btn">
+                                Open Free Books
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- YouTube Tool with Background -->
+            <div id="youtube-tool" class="tool-content youtube-bg">
+                <div class="h-full flex flex-col items-center justify-start p-4 space-y-4 overflow-auto">
+                    <h2 class="text-3xl font-bold mb-2 text-white text-shadow">Educational YouTube Resources</h2>
+                    
+                    <div class="youtube-search-container">
+                        <div class="search-box">
+                            <input type="text" id="youtube-search" class="search-input" placeholder="Search for educational videos...">
+                            <button onclick="searchYouTube()" class="search-button">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                        
+                        <div class="youtube-links">
+                            <!-- Educational YouTube Channels -->
+                            <div class="youtube-card">
+                                <i class="fab fa-youtube youtube-icon"></i>
+                                <h3 class="text-lg font-bold mb-2 text-white">Super Simple Songs</h3>
+                                <p class="mb-3 text-gray-200 text-sm">Kids songs and nursery rhymes</p>
+                                <button onclick="window.open('https://www.youtube.com/user/SuperSimpleSongs', '_blank')" class="external-link-btn">
+                                    Visit Channel
+                                </button>
+                            </div>
+                            
+                            <div class="youtube-card">
+                                <i class="fab fa-youtube youtube-icon"></i>
+                                <h3 class="text-lg font-bold mb-2 text-white">PBS Kids</h3>
+                                <p class="mb-3 text-gray-200 text-sm">Educational shows and games</p>
+                                <button onclick="window.open('https://www.youtube.com/user/pbskids', '_blank')" class="external-link-btn">
+                                    Visit Channel
+                                </button>
+                            </div>
+                            
+                            <div class="youtube-card">
+                                <i class="fab fa-youtube youtube-icon"></i>
+                                <h3 class="text-lg font-bold mb-2 text-white">National Geographic Kids</h3>
+                                <p class="mb-3 text-gray-200 text-sm">Science and nature videos</p>
+                                <button onclick="window.open('https://www.youtube.com/user/NatGeoKids', '_blank')" class="external-link-btn">
+                                    Visit Channel
+                                </button>
+                            </div>
+                            
+                            <div class="youtube-card">
+                                <i class="fab fa-youtube youtube-icon"></i>
+                                <h3 class="text-lg font-bold mb-2 text-white">Khan Academy Kids</h3>
+                                <p class="mb-3 text-gray-200 text-sm">Educational lessons for kids</p>
+                                <button onclick="window.open('https://www.youtube.com/c/KhanAcademyKids', '_blank')" class="external-link-btn">
+                                    Visit Channel
+                                </button>
+                            </div>
+                            
+                            <div class="youtube-card">
+                                <i class="fab fa-youtube youtube-icon"></i>
+                                <h3 class="text-lg font-bold mb-2 text-white">Sesame Street</h3>
+                                <p class="mb-3 text-gray-200 text-sm">Classic educational content</p>
+                                <button onclick="window.open('https://www.youtube.com/user/SesameStreet', '_blank')" class="external-link-btn">
+                                    Visit Channel
+                                </button>
+                            </div>
+                            
+                            <div class="youtube-card">
+                                <i class="fab fa-youtube youtube-icon"></i>
+                                <h3 class="text-lg font-bold mb-2 text-white">Cosmic Kids Yoga</h3>
+                                <p class="mb-3 text-gray-200 text-sm">Yoga and mindfulness for kids</p>
+                                <button onclick="window.open('https://www.youtube.com/user/CosmicKidsYoga', '_blank')" class="external-link-btn">
+                                    Visit Channel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Awards Tool with Background -->
+            <div id="awards-tool" class="tool-content awards-bg">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-rewards-app/" id="awardsIframe"></iframe>
+            </div>
+            
+            <!-- Reports Tool with Background -->
+            <div id="reports-tool" class="tool-content reports-bg">
+                <iframe src="https://ianjsaigon1-ai.github.io/my-reports-app/" id="reportsIframe"></iframe>
+            </div>
+            
+            <!-- English Expectations Tool with Background -->
+            <div id="expectations-tool" class="tool-content expectations-bg">
+                <div class="expectations-container">
+                    <header class="expectations-header">
+                        <h1 class="expectations-title">English Language Expectations</h1>
+                        <p class="expectations-subtitle">Comprehensive guide to language development for EAL and EFL learners across all age groups</p>
+                        
+                        <div class="expectations-legend">
+                            <div class="legend-item">
+                                <div class="legend-color legend-eal"></div>
+                                <span>EAL Learners</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-efl"></div>
+                                <span>EFL Learners</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="expectations-grid">
+                        <div class="expectations-column eal-column">
+                            <div class="column-header">
+                                <i class="fas fa-globe-americas"></i> EAL Learners
+                            </div>
+                        </div>
+                        <div class="expectations-column efl-column">
+                            <div class="column-header">
+                                <i class="fas fa-language"></i> EFL Learners
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expectations-actions">
+                        <a href="#" class="expectations-action-btn print" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print / Save as PDF
+                        </a>
+                        <a href="mailto:?subject=EAL/EFL Language Expectations&body=Check out this comprehensive guide to English language development for EAL and EFL learners." class="expectations-action-btn">
+                            <i class="fas fa-envelope"></i> Email This Guide
+                        </a>
+                    </div>
+
+                    <div class="expectations-footnote">
+                        <strong>Key Definitions:</strong><br>
+                        <strong>EAL</strong> = English as an Additional Language (learning English while living in an English-speaking environment)<br>
+                        <strong>EFL</strong> = English as a Foreign Language (learning English in a non-English-speaking country)<br>
+                        <strong>CEFR</strong> = Common European Framework of Reference for Languages (A1-C2 proficiency scale)<br>
+                        <strong>IGCSE</strong> = International General Certificate of Secondary Education<br>
+                        Language levels progress from A1 (beginner) to C2 (proficient)
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        // Real-time Clock
+        function updateClock() {
+            const now = new Date();
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', dateOptions);
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', timeOptions);
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Student Registration System
+        let students = JSON.parse(localStorage.getItem('classroomStudents')) || [];
+        
+        // Initialize form with current date
+        document.getElementById('joinDate').valueAsDate = new Date();
+        
+        // Load students on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudents();
+            // Initialize other tools data
+            populateColumn('eal-column', ealAges);
+            populateColumn('efl-column', eflAges);
+        });
+        
+        // Form submission
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const student = {
+                id: Date.now().toString(),
+                joinDate: document.getElementById('joinDate').value,
+                vietnameseName: document.getElementById('vietnameseName').value,
+                englishName: document.getElementById('englishName').value,
+                parentName: document.getElementById('parentName').value,
+                parentPhone: document.getElementById('parentPhone').value,
+                parentEmail: document.getElementById('parentEmail').value,
+                registrationTimestamp: new Date().toISOString()
+            };
+            
+            students.push(student);
+            saveStudents();
+            loadStudents();
+            clearForm();
+            
+            alert('Student registered successfully!');
+        });
+        
+        function loadStudents() {
+            const studentsList = document.getElementById('studentsList');
+            studentsList.innerHTML = '';
+            
+            if (students.length === 0) {
+                studentsList.innerHTML = '<p class="text-gray-400 text-center py-4">No students registered yet.</p>';
+                return;
+            }
+            
+            students.forEach(student => {
+                const studentItem = document.createElement('div');
+                studentItem.className = 'student-item';
+                studentItem.innerHTML = `
+                    <div class="student-info">
+                        <h4>${student.englishName} (${student.vietnameseName})</h4>
+                        <p>Parent: ${student.parentName} | Phone: ${student.parentPhone} | Email: ${student.parentEmail}</p>
+                        <p class="text-sm">Joined: ${new Date(student.joinDate).toLocaleDateString()}</p>
+                    </div>
+                    <button class="delete-btn" onclick="deleteStudent('${student.id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                `;
+                studentsList.appendChild(studentItem);
+            });
+            
+            // Update other tools with student data
+            updateOtherTools();
+        }
+        
+        function deleteStudent(id) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                students = students.filter(student => student.id !== id);
+                saveStudents();
+                loadStudents();
+            }
+        }
+        
+        function saveStudents() {
+            localStorage.setItem('classroomStudents', JSON.stringify(students));
+            // Here you would typically send this data to your GitHub server
+            // For now, we're using localStorage
+            console.log('Students saved:', students);
+        }
+        
+        function clearForm() {
+            document.getElementById('studentForm').reset();
+            document.getElementById('joinDate').valueAsDate = new Date();
+        }
+        
+        function updateOtherTools() {
+            // Update rewards app with student names
+            const awardsIframe = document.getElementById('awardsIframe');
+            if (awardsIframe && awardsIframe.contentWindow) {
+                const studentNames = students.map(student => student.englishName);
+                awardsIframe.contentWindow.postMessage({
+                    type: 'UPDATE_STUDENTS',
+                    students: studentNames
+                }, '*');
+            }
+            
+            // Update reports app with student data
+            const reportsIframe = document.getElementById('reportsIframe');
+            if (reportsIframe && reportsIframe.contentWindow) {
+                reportsIframe.contentWindow.postMessage({
+                    type: 'UPDATE_STUDENT_DATA',
+                    students: students
+                }, '*');
+            }
+        }
+
+        // Tool Navigation
+        function showTool(toolId) {
+            // Hide all tool contents
+            document.querySelectorAll('.tool-content').forEach(tool => {
+                tool.classList.remove('active');
+            });
+            
+            // Show the selected tool content
+            document.getElementById(toolId + '-tool').classList.add('active');
+            
+            // Update active button styling
+            document.querySelectorAll('.tool-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+            
+            // Find the button that was clicked and add active class
+            const clickedButton = document.querySelector(`button[onclick="showTool('${toolId}')"]`);
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+        
+        function searchYouTube() {
+            const searchTerm = document.getElementById('youtube-search').value;
+            if (searchTerm) {
+                const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchTerm + ' educational kids')}`;
+                window.open(searchUrl, '_blank');
+            }
+        }
+        
+        // Allow pressing Enter to search
+        document.getElementById('youtube-search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchYouTube();
+            }
+        });
+
+        // English Expectations Data and Functions
+        const ealAges = [
+            {
+                range: "Ages 3–5 (Early Years / Kindergarten) - Pre-A1 → A1", 
+                abilities: [
+                    "Understand simple classroom instructions ('Sit down', 'Line up', 'Come here')",
+                    "Use simple words and short phrases: 'I want water', 'My name is…'",
+                    "Name common objects, animals, colours, numbers",
+                    "Answer simple questions about themselves",
+                    "Begin recognising letters and sounds (phonics)",
+                    "Listen to simple stories with pictures"
+                ],
+                test: {
+                    name: "Jolly Phonics Assessment",
+                    link: "https://www.jollylearning.co.uk/jolly-phonics/"
+                }
+            },
+            {
+                range: "Ages 6–7 (Grade 1–2) - A1 → A1+", 
+                abilities: [
+                    "Speak in short but clear sentences",
+                    "Ask and answer simple questions (Who/What/Where)",
+                    "Understand basic school vocabulary",
+                    "Write basic sentences with support",
+                    "Read simple books with pictures"
+                ],
+                test: {
+                    name: "Oxford Reading Tree Assessment",
+                    link: "https://home.oxfordowl.co.uk/reading/reading-schemes-oxford-levels/oxford-reading-tree-levels/"
+                }
+            },
+            {
+                range: "Ages 8–9 (Grade 3–4) - A1+ → A2", 
+                abilities: [
+                    "Speak in sentences with increasing detail",
+                    "Describe people, places, daily routines",
+                    "Read short paragraphs and answer comprehension questions",
+                    "Write short stories and simple descriptions",
+                    "Understand classroom lessons when visuals are provided"
+                ],
+                test: {
+                    name: "DIBELS Reading Fluency",
+                    link: "https://dibels.uoregon.edu/assessment"
+                }
+            },
+            {
+                range: "Ages 10–11 (Grade 5–6) - A2 → A2+", 
+                abilities: [
+                    "Participate in classroom discussion with some confidence",
+                    "Listen to longer stories or explanations",
+                    "Write short paragraphs with correct basic grammar",
+                    "Understand most common school subjects (science/math explanations)"
+                ],
+                test: {
+                    name: "MAP Growth Reading Assessment",
+                    link: "https://www.nwea.org/map-growth/"
+                }
+            },
+            {
+                range: "Ages 12–13 (Grade 7–8) - A2+ → B1", 
+                abilities: [
+                    "Speak more fluently about school, hobbies, experiences",
+                    "Understand general meaning of lessons taught in English",
+                    "Write multi-paragraph texts with structure (beginning/middle/end)",
+                    "Read age-appropriate stories or articles and summarise"
+                ],
+                test: {
+                    name: "STAR Reading Assessment",
+                    link: "https://www.renaissance.com/products/star-reading/"
+                }
+            },
+            {
+                range: "Ages 14–15 (Grade 9–10 / IGCSE Foundation) - B1 → B1+", 
+                abilities: [
+                    "Join discussions and debate simple topics",
+                    "Understand most classroom teaching without extra help",
+                    "Write essays (150–250 words) with clear arguments",
+                    "Read and analyse longer texts, articles, or short novels"
+                ],
+                test: {
+                    name: "IGCSE English as a Second Language",
+                    link: "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-english-as-a-second-language-0510/"
+                }
+            },
+            {
+                range: "Ages 16–17 (Grade 11 / IGCSE) - B1+ → B2", 
+                abilities: [
+                    "Use academic English confidently",
+                    "Write formal essays, reports, and summaries",
+                    "Understand more complex literature and scientific texts",
+                    "Speak fluently in class presentations and discussions"
+                ],
+                test: {
+                    name: "IELTS Academic Test",
+                    link: "https://www.ielts.org/about-ielts/ielts-academic"
+                }
+            },
+            {
+                range: "Ages 17–18 (Grade 12 / A-Level / Pre-University) - B2 → C1", 
+                abilities: [
+                    "Use advanced academic vocabulary",
+                    "Write long, well-structured essays (400–800 words)",
+                    "Understand lectures, documentaries, and complex readings",
+                    "Present confidently and argue logically"
+                ],
+                test: {
+                    name: "Cambridge English: C1 Advanced",
+                    link: "https://www.cambridgeenglish.org/exams-and-tests/advanced/"
+                }
+            }
+        ];
+
+        const eflAges = [
+            {
+                range: "Ages 3–5 (Kindergarten) - Pre-A1 → A1", 
+                abilities: [
+                    "Recognize simple English words and phrases (Hello, Bye, numbers 1–10)",
+                    "Understand basic classroom instructions with visual support",
+                    "Name familiar objects, colours, animals",
+                    "Begin phonics and letter recognition",
+                    "Repeat simple phrases after a teacher"
+                ],
+                test: {
+                    name: "Super Simple Songs Assessment",
+                    link: "https://supersimple.com/"
+                }
+            },
+            {
+                range: "Ages 6–7 (Grade 1–2) - A1", 
+                abilities: [
+                    "Speak in short sentences about themselves ('My name is…', 'I like…')",
+                    "Understand simple classroom instructions and respond with single words or short phrases",
+                    "Recognize basic vocabulary in reading (numbers, colours, objects)",
+                    "Write simple words or short sentences with teacher support",
+                    "Follow simple classroom routines in English"
+                ],
+                test: {
+                    name: "Let's Go Level 1 Assessment",
+                    link: "https://elt.oup.com/student/letsgo"
+                }
+            },
+            {
+                range: "Ages 8–9 (Grade 3–4) - A1+/A2", 
+                abilities: [
+                    "Describe themselves, friends, and daily routines in simple sentences",
+                    "Read short, illustrated texts and answer comprehension questions",
+                    "Write short paragraphs with correct spelling of familiar words",
+                    "Understand basic classroom explanations with visual aids",
+                    "Start asking and answering simple 'What/Where/Who' questions"
+                ],
+                test: {
+                    name: "Cambridge English: A2 Flyers",
+                    link: "https://www.cambridgeenglish.org/exams-and-tests/flyers/"
+                }
+            },
+            {
+                range: "Ages 10–11 (Grade 5–6) - A2", 
+                abilities: [
+                    "Participate in short classroom discussions on familiar topics",
+                    "Understand longer instructions or stories with some teacher support",
+                    "Write short texts or letters with clear sentences",
+                    "Read short stories, dialogues, or simple articles",
+                    "Use past, present, and simple future tense in basic sentences"
+                ],
+                test: {
+                    name: "Cambridge English: A2 Key for Schools",
+                    link: "https://www.cambridgeenglish.org/exams-and-tests/key-for-schools/"
+                }
+            },
+            {
+                range: "Ages 12–13 (Grade 7–8) - A2+/B1", 
+                abilities: [
+                    "Speak with more fluency on familiar topics (hobbies, school life, family)",
+                    "Understand most classroom instructions and lessons with some support",
+                    "Write multi-sentence paragraphs with correct structure",
+                    "Read age-appropriate texts and summarise main ideas",
+                    "Ask and answer questions in complete sentences"
+                ],
+                test: {
+                    name: "Cambridge English: B1 Preliminary for Schools",
+                    link: "https://www.cambridgeenglish.org/exams-and-tests/preliminary-for-schools/"
+                }
+            },
+            {
+                range: "Ages 14–15 (Grade 9–10 / IGCSE Foundation) - B1/B1+", 
+                abilities: [
+                    "Join classroom discussions and express opinions on simple topics",
+                    "Understand lessons and texts with minimal help",
+                    "Write structured essays (150–250 words) on familiar topics",
+                    "Read and analyse short articles, texts, or simple novels",
+                    "Use more varied vocabulary and connect ideas in writing"
+                ],
+                test: {
+                    name: "TOEFL Junior Standard Test",
+                    link: "https://www.ets.org/toefl_junior"
+                }
+            },
+            {
+                range: "Ages 16–17 (Grade 11) - B1+/B2", 
+                abilities: [
+                    "Use English for academic tasks and classroom projects",
+                    "Write formal essays, reports, or summaries (250–400 words)",
+                    "Understand complex texts, short stories, and articles with some explanation",
+                    "Participate in debates or presentations with some preparation",
+                    "Read and understand English instructions in exams or textbooks"
+                ],
+                test: {
+                    name: "IELTS General Training",
+                    link: "https://www.ielts.org/about-ielts/ielts-general-training"
+                }
+            },
+            {
+                range: "Ages 17–18 (Grade 12 / Pre-University) - B2/C1", 
+                abilities: [
+                    "Use English confidently in academic writing and presentations",
+                    "Read and analyse complex articles, textbooks, or literary texts",
+                    "Write well-structured essays and reports (400–800 words)",
+                    "Participate fluently in discussions and debates on familiar and semi-abstract topics",
+                    "Understand lectures or lessons with minimal support"
+                ],
+                test: {
+                    name: "TOEFL iBT Test",
+                    link: "https://www.ets.org/toefl"
+                }
+            }
+        ];
+
+        function populateColumn(columnId, data) {
+            const column = document.querySelector(`.${columnId}`);
+            // Clear existing content except header
+            while (column.children.length > 1) {
+                column.removeChild(column.lastChild);
+            }
+            
+            data.forEach(ageGroup => {
+                const box = document.createElement('div');
+                box.className = 'age-box';
+                
+                const abilitiesHTML = ageGroup.abilities.map(ability => 
+                    `<div class="ability-item">
+                        <i class="fas fa-check ability-icon"></i>
+                        <span>${ability}</span>
+                    </div>`
+                ).join('');
+                
+                box.innerHTML = `
+                    <div class='age-title'>${ageGroup.range}</div>
+                    <div class='abilities-list'>
+                        ${abilitiesHTML}
+                    </div>
+                    <div class='test-section'>
+                        <div class='test-title'>Recommended Assessment:</div>
+                        <a href='${ageGroup.test.link}' target='_blank' class='test-btn'>
+                            ${ageGroup.test.name} <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                `;
+                
+                column.appendChild(box);
+            });
+        }
+        
+        // Initialize with home tool active
+        showTool('home');
+    </script>
+</body>
+</html>
